@@ -28,17 +28,38 @@ body {
   position: relative;
 }
 
+#header,
+#timeline,
+#footer {
+  background: #fff;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+}
+
+#header {
+  height: 60px;
+  top: 0;
+}
+
+#timeline {
+  bottom: 120px;
+  height: 40px;
+}
+
+#footer {
+  bottom: 0;
+  height: 80px;
+}
+
 #map {
-  height: 80%;
+  height: 100%;
   width: 100%;
 }
 
 #map #map-canvas {
   height: 100%;
-}
-
-#timeline {
-
 }
 
 /*
