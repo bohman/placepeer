@@ -74,7 +74,7 @@
       removeShit();
     }
 
-    jQuery.when(getTwitter(0, 0, 0, '', false)).then(buildShit);
+    jQuery.when(getTwitter(0, 0, 0, '', false), getFlickr(initLat, initLon, initRadius, initSearch, initDate)).then(buildShit);
 
     initiated = true;
   }
@@ -89,6 +89,29 @@
 
     return jQuery.ajax({
       url: twitterRequestUrl+requestUrl,
+      dataType: 'jsonp'
+    });
+  }
+
+  function getFlickr(lat, lon, radius, searchString, date) {
+    var apiKey = '4cfe4215f3d4716ccee8a3bb631aa791';
+    var endpoint = 'http://api.flickr.com/services/rest/?jsoncallback=?'; // Couldn't add jsoncallback with data for some reason
+
+    // Todo: add date parameter (min_taken_date & max_taken_date)
+
+    return jQuery.ajax({
+      url: endpoint,
+      data: {
+        method: 'flickr.photos.search',
+        format: 'json',
+        extras: 'geo,url_m,date_taken,description',
+        has_geo: 1,
+        api_key: apiKey,
+        text: searchString,
+        lat: lat,
+        lon: lon,
+        radius: radius + 'km'
+      },
       dataType: 'jsonp'
     });
   }
@@ -109,14 +132,20 @@
   //
   // Add the results to the map, and create the initial list.
   //
-  function buildShit(twitterResult) {
+  function buildShit(twitterResult, flickrResult) {
     $(twitterResult.results).each(function(index) {
       if (this.geo) {
         id = 'twitter-' + index;
         addToAllYourNodes(id, this.geo.coordinates[0], this.geo.coordinates[1], 'asd', 'asd', 'asd', 'asd', 'asd');
       }
     });
-  
+
+    $(flickrResult[0]['photos']['photo']).each(function(index) {
+      id = 'flickr-' + index;
+      url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
+      addToAllYourNodes(id, this.latitude, this.longitude, this.description._content, this.url_m, '', this.datetaken, url);
+    });
+
     jQuery.each(allYourNodes, function(key, value) {
       addMarker(this.lat, this.lon);
     });
