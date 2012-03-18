@@ -139,7 +139,7 @@
   // Add the results to the map, and create the initial list.
   //
   function buildShit(twitterResult, flickrResult) {
-    $(twitterResult.results).each(function(index) {
+    $(twitterResult[0]['results']).each(function(index) {
       if (this.geo) {
         id = 'twitter-' + index;
         addToAllYourNodes(id, this.geo.coordinates[0], this.geo.coordinates[1], 'asd', 'asd', 'asd', 'asd', 'asd');
