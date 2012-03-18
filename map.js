@@ -1,8 +1,3 @@
-//
-// Creating some globaly accessible namespaces.
-//
-Callbacks = {};
-
 (function () {
 
   /**
