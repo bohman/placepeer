@@ -74,7 +74,7 @@
       removeShit();
     }
 
-    jQuery.when(getTwitter(0, 0, 0, '', false)).then(buildShit);
+    jQuery.when(getTwitter(initLat, initLon, initRadius, initSearch, initDate)).then(buildShit);
 
     initiated = true;
   }
@@ -83,13 +83,19 @@
   //
   // Get functions. Fetch data from every service, and add the results to allYourNodes.
   //
+  // TODO: Add support for date.
   function getTwitter(lat, lon, radius, searchString, date) {
-    var twitterRequestUrl = 'http://search.twitter.com/search.json?&include_entities=1'; // If twitter ever changes api search
-    var requestUrl = 'q=&geocode=55.596911,12.998478,4km' // The first request is what?
+    // The endpoint url that we'll use for the AJAX request.
+    var endpoint = 'http://search.twitter.com/search.json';
 
-    return jQuery.ajax({
-      url: twitterRequestUrl+requestUrl,
-      dataType: 'jsonp'
+    return jQuery.ajax(endpoint, {
+      dataType: 'jsonp',
+      data: {
+        q: searchString,
+        geocode: lat + ',' + lon + ',' + radius + 'km',
+        //until: date,
+        rpp: 100
+      }
     });
   }
 
