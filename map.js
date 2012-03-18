@@ -1,3 +1,8 @@
+//
+// Creating some globaly accessible namespaces.
+//
+Callbacks = {};
+
 (function () {
 
   /**
@@ -12,6 +17,7 @@
     Lars Berggren - @punktlars
     Jens Grip - @jensgrip
     Daniel Friis - @danielfriis
+    Olof Johansson - @ojohansson
 
   **/
 
@@ -20,25 +26,14 @@
   // Settings
   //
   var sitepath = ''; //Where is the site located? If we need to reference images in JS (markers)
-  var twitterRequestUrl = 'http://search.twitter.com/search.json?&include_entities=1'; // If twitter ever changes api search
-  var requestUrl = 'q=&geocode=55.596911,12.998478,4km' // The first request is what?
-
-
+  
   //
   // Set up global variables and run map_init() as a callback.
   //
-  var bounds = new google.maps.LatLngBounds();
-  var infoWindow = new google.maps.InfoWindow({ content: 'Loading information...' });
   var map;
-  var mapInit = false;
-  var mapNodes;
-  var markersArray = [];
-  var setBounds = false;
-
-  jQuery(document).ready(function() {
-    map_init();
-  });
-
+  var initiated = false;
+  var allYourNodes = {};
+  var allYourMarkers = [];
 
   //
   // map_init()
@@ -46,11 +41,10 @@
   // was your mother, it'd be HUGE. As in important, since
   // it basically gives birth to the entire map. You dig?
   //
-  function map_init() {
+  function mapInit() {
 
     // Save and parse all map markers in an object. Also update mapInit variable
     // to let other functions know this is the first time we build the map.
-    mapInit = true;
     jQuery('#map').removeClass('no-js');
 
     // Initial map load: build map
@@ -64,41 +58,65 @@
     }
     map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
-    doRequest(requestUrl);
-
-    mapInit = false;
+    doShit();
   }
 
 
   //
-  // buildNodes()
-  // Made to run in the checkFilter function. Ensures bubbles and list
-  // is populated with proper information.
+  // Runs everything in the correct order.
   //
-  function buildNodes(data) {
+  function doShit() {
+    if (initiated) {
+      removeShit();
+    }
+    
+    jQuery.when(getTwitter(0, 0, 0, '', false)).then(buildShit);
 
-    mapNodes = data;
+    initiated = true;
+  }
+  
+  //
+  // Get functions. Fetch data from every service, and add the results to allYourNodes.
+  //
+  function getTwitter(lat, lon, radius, searchString, date) {
+    var twitterRequestUrl = 'http://search.twitter.com/search.json?&include_entities=1'; // If twitter ever changes api search
+    var requestUrl = 'q=&geocode=55.596911,12.998478,4km' // The first request is what?
 
-    jQuery.each(mapNodes['results'], function(key, value) {
-      var lat = value['geo']['coordinates'][0];
-      var lon = value['geo']['coordinates'][1];
-      addMarker(lat, lon);
+    return jQuery.ajax({
+      url: twitterRequestUrl+requestUrl,
+      dataType: 'jsonp'
     });
+  }
 
-    // Creating map bubbles and updating icons if needed
-    for (i=0; i < markersArray.length; i++) {
-
-      // Build bubble events if needed
-
-      // Build timeline
-
+  function addToAllYourNodes(id, lat, lon, text, image, video, date, url) {
+    allYourNodes[id] = {
+      lat: lat,
+      lon: lon,
+      text: text,
+      image: image,
+      video: video,
+      date: date,
+      url: url
     }
   }
 
+  //
+  // Add the results to the map, and create the initial list.
+  //
+  function buildShit(twitterResult) {
+    $(twitterResult.results).each(function(index) {
+      if (this.geo) {
+        id = 'twitter-' + index;
+        addToAllYourNodes(id, this.geo.coordinates[0], this.geo.coordinates[1], 'asd', 'asd', 'asd', 'asd', 'asd');
+      }
+    });
+  
+    jQuery.each(allYourNodes, function(key, value) {
+      addMarker(this.lat, this.lon);
+    });
 
-  //
-  // General utilities
-  //
+    // Skapa lista.
+  }
 
   function addMarker(lat, lon) {
     var location = new google.maps.LatLng(lat, lon);
@@ -106,25 +124,29 @@
       position: location,
       map: map
     });
-    markersArray.push(marker);
+    allYourMarkers.push(marker);
   }
 
-  function removeMarkers() {
-    if (markersArray) {
-      for (i=0; i < markersArray.length; i++) {
-        markersArray[i].setMap(null);
+  //
+  // Will reset the results, emptying our arrays, clear the list and remove the markers.
+  //
+  function removeShit() {
+    if (allYourMarkers) {
+      for (i=0; i < allYourMarkers.length; i++) {
+        allYourMarkers[i].setMap(null);
       }
-      markersArray.length = 0;
+      allYourMarkers.length = 0;
     }
-    // Empty timeline if needed
+    
+    // Kill list.
   }
 
-  function doRequest(requestUrl) {
-    jQuery.ajax({
-      url: twitterRequestUrl+requestUrl,
-      dataType: 'jsonp',
-      jsonpCallback: 'buildNodes'
-    });
-  }
+  //
+  // Start your engines.
+  //
+  jQuery(document).ready(function() {
+    mapInit();
+  });
+  
 
 }());
