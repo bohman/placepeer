@@ -12,7 +12,7 @@
 <body>
   
   <div id="header">
-    <a id="logo" href=""><img src="../graphics/logo.png"></a>
+    <a id="logo" href=""><img src="graphics/logo.png"></a>
     <div class="dropdown">
       List
     </div>
