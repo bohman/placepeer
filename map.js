@@ -21,7 +21,15 @@
   // Settings
   //
   var sitepath = ''; //Where is the site located? If we need to reference images in JS (markers)
-  
+
+  // temporary testing params
+  var initLat = 55.596911;
+  var initLon = 12.998478;
+  var initRadius = 4;
+  var initSearch = '';
+  var initDate = false;
+
+
   //
   // Set up global variables and run map_init() as a callback.
   //
@@ -29,6 +37,7 @@
   var initiated = false;
   var allYourNodes = {};
   var allYourMarkers = [];
+
 
   //
   // map_init()
@@ -64,12 +73,13 @@
     if (initiated) {
       removeShit();
     }
-    
+
     jQuery.when(getTwitter(0, 0, 0, '', false)).then(buildShit);
 
     initiated = true;
   }
-  
+
+
   //
   // Get functions. Fetch data from every service, and add the results to allYourNodes.
   //
@@ -94,6 +104,7 @@
       url: url
     }
   }
+
 
   //
   // Add the results to the map, and create the initial list.
@@ -122,6 +133,7 @@
     allYourMarkers.push(marker);
   }
 
+
   //
   // Will reset the results, emptying our arrays, clear the list and remove the markers.
   //
@@ -135,6 +147,7 @@
     
     // Kill list.
   }
+
 
   //
   // Start your engines.
