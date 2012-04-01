@@ -194,6 +194,10 @@
   // Add the results to the map, and create the initial list.
   //
   function buildShit(twitterResult, flickrResult, youTubeResult) {
+
+    // TODO: Add error handling. If we get a crappy result
+    // we shouldn't kill everything.
+
     // Add twitter result to allYourNodes
     $(twitterResult[0]['results']).each(function(index) {
       if (this.geo) {
@@ -355,7 +359,7 @@
 
     // distance = circle radius from center to Northeast corner of bounds
     var disMiles = r * Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1));
-    var disKM = Math.round(disMiles*1.609);
+    var disKM = Math.round((disMiles*1.609)*10)/10;
     return disKM;
   }
 
