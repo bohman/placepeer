@@ -6,6 +6,7 @@
   <link rel='stylesheet' id='placepeer-css'  href='css/style.css' type='text/css' media='all' />
   <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCBZ5stPtmfRqLgbtjwd-SCGApkG_OlnDU&sensor=false"></script>
+  <script type='text/javascript' src='utils.js'></script>
   <script type='text/javascript' src='map.js'></script>
   <script type='text/javascript' src='interface.js'></script>
 </head>
