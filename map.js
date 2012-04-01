@@ -110,13 +110,19 @@
   function getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var endpoint = 'http://search.twitter.com/search.json';
 
+    // Ensuring search date is + one day,
+    // since Twitter until doesn't include the
+    // date you set
+    searchDate = searchDate + 60*60*24;
+
     return jQuery.ajax(endpoint, {
       dataType: 'jsonp',
       data: {
         q: searchQuery,
         geocode: searchLat + ',' + searchLon + ',' + searchRadius + 'km',
         until: date('Y-m-d', searchDate),
-        rpp: 100
+        rpp: 100,
+        result_type: 'recent'
       }
     });
   }
@@ -124,6 +130,11 @@
   function getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var apiKey = '4cfe4215f3d4716ccee8a3bb631aa791';
     var endpoint = 'http://api.flickr.com/services/rest/?jsoncallback=?'; // Couldn't add jsoncallback with data for some reason
+
+    // Max radius for flickr is 32 km.
+    if(searchRadius > 32) {
+      searchRadius = 32;
+    }
 
     return jQuery.ajax({
       url: endpoint,
