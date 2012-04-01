@@ -34,6 +34,18 @@
     <div id="map-canvas"></div>
   </div>
 
+  <form id="controls" method="get" action="<?php $_SERVER['REQUEST_URI']; ?>">
+    <p><label for="searchQuery">Query:</label> <input type="text" name="searchQuery" class="searchQuery" /></p>
+    <p><label for="searchDate">Date:</label> <input type="text" name="searchDate" class="searchDate" /></p>
+    <p>
+      <input type="hidden" name="searchLat" class="searchLat" value="" />
+      <input type="hidden" name="searchLon" class="searchLon" value="" />
+      <input type="hidden" name="searchRadius" class="searchRadius" value="" />
+      <input type="hidden" name="mapZoomLevel" class="mapZoomLevel" value="" />
+      <input class="submit" type="submit" value="Go" />
+    </p>
+  </form>
+
   <!--<div id="timeline">
     timeline
   </div>-->

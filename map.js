@@ -1,5 +1,6 @@
 (function () {
 
+
   /**
 
     PlacePeer
@@ -10,7 +11,7 @@
 
     Perhaps a bit hacky, but still an awesome test of concept. Yeah!
 
-    By:
+    People involved:
     Björn Albertsson - @bjornalbertsson
     Linus Bohman - @linusbohman
     Lars Berggren - @punktlars
@@ -37,7 +38,8 @@
   var searchRadius = 4;
   var searchQuery = '';
   var searchDate = date('Y-m-d');
-  
+  var mapZoomLevel = 13;
+
 
   //
   // Set up global variables and run map_init() as a callback.
@@ -57,14 +59,23 @@
   //
   function mapInit() {
 
-    // Save and parse all map markers in an object. Also update mapInit variable
-    // to let other functions know this is the first time we build the map.
     jQuery('#map').removeClass('no-js');
 
+    // Update default values if we have parameters
+    var params = getUrlParams();
+    if(params.length) {
+      searchLat = params['searchLat'] ? params['searchLat'] : searchLat;
+      searchLon = params['searchLon'] ? params['searchLon'] : searchLon;
+      searchRadius = params['searchRadius'] ? params['searchRadius'] : searchRadius;
+      searchQuery = params['searchQuery'] ? params['searchQuery'] : searchQuery;
+      searchDate = strtotime(params['searchDate'] ? params['searchDate'] : searchDate);
+      mapZoomLevel = parseInt(params['mapZoomLevel'] ? params['mapZoomLevel'] : mapZoomLevel);
+    }
+
     // Initial map load: build map
-    var latlng = new google.maps.LatLng(55.596911,12.998478);
+    var latlng = new google.maps.LatLng(searchLat, searchLon);
     var mapOptions = {
-      zoom: 13,
+      zoom: mapZoomLevel,
       center: latlng,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       streetViewControl: false,
@@ -80,16 +91,6 @@
   // Runs everything in the correct order.
   //
   function doShit() {
-    var params = getUrlParams();
-
-    if(params.length) {
-      searchLat = params['searchLat'] ? params['searchLat'] : searchLat;
-      searchLon = params['searchLon'] ? params['searchLon'] : searchLon;
-      searchRadius = params['searchRadius'] ? params['searchRadius'] : searchRadius;
-      searchQuery = params['searchQuery'] ? params['searchQuery'] : searchQuery;
-      searchDate = strtotime(params['searchDate'] ? params['searchDate'] : searchDate);
-    }
-
     if (initiated) {
       removeShit();
     }
@@ -110,6 +111,11 @@
   function getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var endpoint = 'http://search.twitter.com/search.json';
 
+    // Ensuring search date is + one day,
+    // since Twitter until doesn't include the
+    // date you set
+    searchDate = searchDate + 60*60*24;
+
     return jQuery.ajax(endpoint, {
       dataType: 'jsonp',
       data: {
@@ -117,7 +123,8 @@
         q: searchQuery,
         geocode: searchLat + ',' + searchLon + ',' + searchRadius + 'km',
         until: date('Y-m-d', searchDate),
-        rpp: 100
+        rpp: 100,
+        result_type: 'recent'
       }
     });
   }
@@ -125,6 +132,11 @@
   function getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var apiKey = '4cfe4215f3d4716ccee8a3bb631aa791';
     var endpoint = 'http://api.flickr.com/services/rest/?jsoncallback=?'; // Couldn't add jsoncallback with data for some reason
+
+    // Max radius for flickr is 32 km.
+    if(searchRadius > 32) {
+      searchRadius = 32;
+    }
 
     return jQuery.ajax({
       url: endpoint,
@@ -222,7 +234,7 @@
     $(youTubeResult[0]['feed']['entry']).each(function(index) {
       if (this.georss$where) {
         // Set the arguments.
-        var id = 'flickr-' + index;
+        var id = 'youtube-' + index;
         var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
         var lat = coordinates[0];
         var lon = coordinates[1];
@@ -240,6 +252,11 @@
       addMarker(this);
       // Skapa lista.
     });
+
+    // Update form and set map events
+    updateForm();
+    google.maps.event.addListener(map, 'center_changed', function(event) { updateForm(); });
+    google.maps.event.addListener(map, 'zoom_changed', function(event) { updateForm(); });
   }
 
   function addMarker(object) {
@@ -314,6 +331,49 @@
       vars[hash[0]] = hash[1];
     }
     return vars;
+  }
+
+
+  //
+  // getCurrentRadius()
+  // Gives you current radius of map in miles
+  //
+  function getCurrentRadius() {
+    var bounds = map.getBounds();
+
+    var center = bounds.getCenter();
+    var ne = bounds.getNorthEast();
+
+    // r = radius of the earth in statute miles
+    var r = 3963.0;  
+
+    // Convert lat or lng from decimal degrees into radians (divide by 57.2958)
+    var lat1 = center.lat() / 57.2958; 
+    var lon1 = center.lng() / 57.2958;
+    var lat2 = ne.lat() / 57.2958;
+    var lon2 = ne.lng() / 57.2958;
+
+    // distance = circle radius from center to Northeast corner of bounds
+    var disMiles = r * Math.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon2 - lon1));
+    var disKM = Math.round(disMiles*1.609);
+    return disKM;
+  }
+
+
+  //
+  // updateForm()
+  // Updates front end form with correct values from map
+  //
+  function updateForm() {
+    var curLatLon = map.getCenter();
+    searchLat = curLatLon['Ta'];
+    searchLon = curLatLon['Ua'];
+    searchRadius = getCurrentRadius();
+    mapZoomLevel = map.getZoom();
+    jQuery('#controls .searchLat').val(searchLat);
+    jQuery('#controls .searchLon').val(searchLon);
+    jQuery('#controls .searchRadius').val(searchRadius);
+    jQuery('#controls .mapZoomLevel').val(mapZoomLevel);
   }
 
 
