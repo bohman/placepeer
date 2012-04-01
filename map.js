@@ -23,11 +23,11 @@
   var sitepath = ''; //Where is the site located? If we need to reference images in JS (markers)
 
   // temporary testing params
-  var initLat = 55.596911;
-  var initLon = 12.998478;
-  var initRadius = 4;
-  var initSearch = '';
-  var initDate = false;
+  var searchLat = 55.596911;
+  var searchLon = 12.998478;
+  var searchRadius = 4;
+  var searchQuery = '';
+  var searchDate = false;
 
 
   //
@@ -60,7 +60,7 @@
       streetViewControl: false,
       scrollwheel: false
     }
-    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
     doShit();
   }
@@ -70,11 +70,24 @@
   // Runs everything in the correct order.
   //
   function doShit() {
+    var params = getUrlParams();
+
+    if(params.length) {
+      searchLat = params['searchLat'] ? params['searchLat'] : searchLat;
+      searchLon = params['searchLon'] ? params['searchLon'] : searchLon;
+      searchRadius = params['searchRadius'] ? params['searchRadius'] : searchRadius;
+      searchQuery = params['searchQuery'] ? params['searchQuery'] : searchQuery;
+      searchDate = params['searchDate'] ? params['searchDate'] : searchDate;
+    }
+
     if (initiated) {
       removeShit();
     }
 
-    jQuery.when(getTwitter(initLat, initLon, initRadius, initSearch, initDate), getFlickr(initLat, initLon, initRadius, initSearch, initDate)).then(buildShit);
+    jQuery.when(
+      getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate),
+      getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate)
+    ).then(buildShit);
 
     initiated = true;
   }
@@ -139,6 +152,7 @@
   // Add the results to the map, and create the initial list.
   //
   function buildShit(twitterResult, flickrResult) {
+    // Add twitter result to allYourNodes
     $(twitterResult[0]['results']).each(function(index) {
       if (this.geo) {
         id = 'twitter-' + index;
@@ -146,17 +160,18 @@
       }
     });
 
+    // Add flickr result to allYourNodes
     $(flickrResult[0]['photos']['photo']).each(function(index) {
       id = 'flickr-' + index;
       url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
       addToAllYourNodes(id, this.latitude, this.longitude, this.description._content, this.url_m, '', this.datetaken, url);
     });
 
+    // Use allYourNodes to add markers to map and build list
     jQuery.each(allYourNodes, function(key, value) {
       addMarker(this.lat, this.lon);
+      // Skapa lista.
     });
-
-    // Skapa lista.
   }
 
   function addMarker(lat, lon) {
@@ -179,8 +194,25 @@
       }
       allYourMarkers.length = 0;
     }
-    
+
     // Kill list.
+  }
+
+
+  //
+  // getUrlParams()
+  // Returns URL parameters in a nifty array. Duh.
+  //
+
+  function getUrlParams() {
+    var vars = [], hash;
+    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+    for(var i = 0; i < hashes.length; i++) {
+      hash = hashes[i].split('=');
+      vars.push(hash[0]);
+      vars[hash[0]] = hash[1];
+    }
+    return vars;
   }
 
 
@@ -190,6 +222,6 @@
   jQuery(document).ready(function() {
     mapInit();
   });
-  
+
 
 }());
