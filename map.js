@@ -4,7 +4,11 @@
 
     PlacePeer
 
-    A bit hacky, but an awesome test of concept. Yeah!
+    A small project that wants to give an overview of a thing, on a date, at a place.
+    We aggregate info from several sources, sort it by date/geo/keywords, place them on a
+    map and create a nice overview list.
+
+    Perhaps a bit hacky, but still an awesome test of concept. Yeah!
 
     By:
     Björn Albertsson - @bjornalbertsson
@@ -14,6 +18,10 @@
     Daniel Friis - @danielfriis
     Olof Johansson - @ojohansson
 
+    Companies involved:
+    Odd Hill - http://oddhill.se
+    040 Internet - http://040.se
+
   **/
 
 
@@ -22,7 +30,7 @@
   //
   var sitepath = ''; //Where is the site located? If we need to reference images in JS (markers)
 
-  // temporary testing params
+  // Default values
   var searchLat = 55.596911;
   var searchLon = 12.998478;
   var searchRadius = 4;
@@ -77,7 +85,7 @@
       searchLon = params['searchLon'] ? params['searchLon'] : searchLon;
       searchRadius = params['searchRadius'] ? params['searchRadius'] : searchRadius;
       searchQuery = params['searchQuery'] ? params['searchQuery'] : searchQuery;
-      searchDate = params['searchDate'] ? params['searchDate'] : searchDate;
+      searchDate = strtotime(params['searchDate'] ? params['searchDate'] : searchDate);
     }
 
     if (initiated) {
@@ -96,27 +104,23 @@
   //
   // Get functions. Fetch data from every service, and add the results to allYourNodes.
   //
-  // TODO: Add support for date.
-  function getTwitter(lat, lon, radius, searchString, date) {
-    // The endpoint url that we'll use for the AJAX request.
+  function getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var endpoint = 'http://search.twitter.com/search.json';
 
     return jQuery.ajax(endpoint, {
       dataType: 'jsonp',
       data: {
-        q: searchString,
-        geocode: lat + ',' + lon + ',' + radius + 'km',
-        //until: date,
+        q: searchQuery,
+        geocode: searchLat + ',' + searchLon + ',' + searchRadius + 'km',
+        until: date('Y-m-d', searchDate),
         rpp: 100
       }
     });
   }
 
-  function getFlickr(lat, lon, radius, searchString, date) {
+  function getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var apiKey = '4cfe4215f3d4716ccee8a3bb631aa791';
     var endpoint = 'http://api.flickr.com/services/rest/?jsoncallback=?'; // Couldn't add jsoncallback with data for some reason
-
-    // Todo: add date parameter (min_taken_date & max_taken_date)
 
     return jQuery.ajax({
       url: endpoint,
@@ -126,10 +130,12 @@
         extras: 'geo,url_m,date_taken,description',
         has_geo: 1,
         api_key: apiKey,
-        text: searchString,
-        lat: lat,
-        lon: lon,
-        radius: radius + 'km'
+        text: searchQuery,
+        lat: searchLat,
+        lon: searchLon,
+        min_taken_date: date('Y-m-d', searchDate),
+        max_taken_date: date('Y-m-d', searchDate),
+        radius: searchRadius + 'km'
       },
       dataType: 'jsonp'
     });
@@ -203,7 +209,6 @@
   // getUrlParams()
   // Returns URL parameters in a nifty array. Duh.
   //
-
   function getUrlParams() {
     var vars = [], hash;
     var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
