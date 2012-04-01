@@ -21,6 +21,7 @@
     Companies involved:
     Odd Hill - http://oddhill.se
     040 Internet - http://040.se
+    Mediegymnasiet Malmö - http://mediegymnasiet.net
 
   **/
 
