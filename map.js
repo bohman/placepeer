@@ -74,7 +74,7 @@
       removeShit();
     }
 
-    jQuery.when(getTwitter(initLat, initLon, initRadius, initSearch, initDate), getFlickr(initLat, initLon, initRadius, initSearch, initDate)).then(buildShit);
+    jQuery.when(getTwitter(initLat, initLon, initRadius, initSearch, initDate), getFlickr(initLat, initLon, initRadius, initSearch, initDate), getYouTube(initLat, initLon, initRadius, initSearch, initDate)).then(buildShit);
 
     initiated = true;
   }
@@ -121,6 +121,26 @@
       dataType: 'jsonp'
     });
   }
+  
+  function getYouTube(lat, lon, radius, searchString, date) {
+    var endpoint = 'https://gdata.youtube.com/feeds/api/videos';
+
+    return jQuery.ajax({
+      url: endpoint,
+      data: {
+        'v': 2,
+        'alt': 'json',
+        'safeSearch': 'none',
+        'orderby': 'published',
+        'location': lat + ',' + lon,
+        'location-radius': radius + 'km',
+        'q': searchString,
+        //published-min: '',
+        //published-max: ''
+      },
+      dataType: 'jsonp'
+    });
+  }
 
   function addToAllYourNodes(id, lat, lon, text, image, video, date, url) {
     allYourNodes[id] = {
@@ -138,18 +158,26 @@
   //
   // Add the results to the map, and create the initial list.
   //
-  function buildShit(twitterResult, flickrResult) {
+  function buildShit(twitterResult, flickrResult, youTubeResult) {
     $(twitterResult[0]['results']).each(function(index) {
       if (this.geo) {
-        id = 'twitter-' + index;
+        var id = 'twitter-' + index;
         addToAllYourNodes(id, this.geo.coordinates[0], this.geo.coordinates[1], 'asd', 'asd', 'asd', 'asd', 'asd');
       }
     });
 
     $(flickrResult[0]['photos']['photo']).each(function(index) {
-      id = 'flickr-' + index;
-      url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
+      var id = 'flickr-' + index;
+      var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
       addToAllYourNodes(id, this.latitude, this.longitude, this.description._content, this.url_m, '', this.datetaken, url);
+    });
+    
+    $(youTubeResult[0]['feed']['entry']).each(function(index) {
+      if (this.georss$where) {
+        var id = 'flickr-' + index;
+        var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
+        addToAllYourNodes(id, coordinates[0], coordinates[1], this.title.$t, '', this.content.src, this.published.$t, this.link[0].href);
+      }
     });
 
     jQuery.each(allYourNodes, function(key, value) {
