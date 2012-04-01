@@ -37,8 +37,8 @@
   var searchLon = 12.998478;
   var searchRadius = 4;
   var searchQuery = '';
-  var searchDate = false;
-
+  var searchDate = date('Y-m-d');
+  
 
   //
   // Set up global variables and run map_init() as a callback.
@@ -144,7 +144,7 @@
     });
   }
   
-  function getYouTube(lat, lon, radius, searchString, date) {
+  function getYouTube(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var endpoint = 'https://gdata.youtube.com/feeds/api/videos';
 
     return jQuery.ajax({
@@ -154,11 +154,11 @@
         'alt': 'json',
         'safeSearch': 'none',
         'orderby': 'published',
-        'location': lat + ',' + lon,
-        'location-radius': radius + 'km',
-        'q': searchString,
-        //published-min: '',
-        //published-max: ''
+        'location': searchLat + ',' + searchLon,
+        'location-radius': searchRadius + 'km',
+        'q': searchQuery,
+        //'published-min': date('Y-m-dT00:00:00', searchDate),
+        //'published-max': date('Y-m-dT23:59:59', searchDate)
       },
       dataType: 'jsonp'
     });
