@@ -1,5 +1,6 @@
 (function () {
 
+
   /**
 
     PlacePeer
@@ -10,7 +11,7 @@
 
     Perhaps a bit hacky, but still an awesome test of concept. Yeah!
 
-    By:
+    People involved:
     Björn Albertsson - @bjornalbertsson
     Linus Bohman - @linusbohman
     Lars Berggren - @punktlars
@@ -198,7 +199,7 @@
     // Add YouTube results to allYourNodes.
     $(youTubeResult[0]['feed']['entry']).each(function(index) {
       if (this.georss$where) {
-        var id = 'flickr-' + index;
+        var id = 'youtube-' + index;
         var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
         addToAllYourNodes(id, coordinates[0], coordinates[1], this.title.$t, '', this.content.src, this.published.$t, this.link[0].href);
       }
