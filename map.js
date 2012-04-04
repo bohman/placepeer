@@ -370,8 +370,8 @@
   //
   function updateForm() {
     var curLatLon = map.getCenter();
-    searchLat = curLatLon['Ta'];
-    searchLon = curLatLon['Ua'];
+    searchLat = curLatLon['Xa'];
+    searchLon = curLatLon['Ya'];
     searchRadius = getCurrentRadius();
     mapZoomLevel = map.getZoom();
     jQuery('#controls .searchLat').val(searchLat);
