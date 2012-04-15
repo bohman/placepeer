@@ -104,18 +104,26 @@ body {
   height: 100%;
 }
 
-.ui-autocomplete {
-  background: #fff;
-  width: 180px;
-  border: 1px solid #000;
+.submit {
+  margin: 10px 0px;
+  color: #F5F5F5;
+  background: #EE5B00;
+  .boxShadow(0, 1px, 3px, rgba(0, 0, 0, 0.4));
+  font-size: 1.1em;
+  padding: 4px 8px;
+  .roundedCorners(5px);
+  border: 0;
+  background: -webkit-gradient(linear, left top, left bottom, from(#DD4B00), to(#FF7B00));
+  background: -webkit-linear-gradient(top, #DD4B00, #FF7B00);
+  background: -moz-linear-gradient(top, #DD4B00, #FF7B00);
+  background: -ms-linear-gradient(top, #DD4B00, #FF7B00);
+  background: -o-linear-gradient(top, #DD4B00, #FF7B00);
 }
 
-.ui-autocomplete li a {
-  padding: 5px;
-  cursor: pointer;
-  display: block;
+.submit:hover {
+  background: #DD4B00;
 }
 
-.ui-autocomplete .ui-state-hover {
-  background: #efefef;
+.submit:active {
+  background: #BB2B00;
 }
