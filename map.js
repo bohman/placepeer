@@ -85,6 +85,9 @@
 
     // Add markers
     doShit();
+
+    // Initialize form controls
+    initForm();
   }
 
 
@@ -437,7 +440,7 @@
       },
       //This bit is executed upon selection of an address
       select: function(event, ui) {
-        window.updateForm();
+        updateForm();
         var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
         map.setCenter(location);
       }
@@ -447,7 +450,7 @@
         return false;
       }
     });
-  });
+  }
 
 
   //
