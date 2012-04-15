@@ -30,7 +30,7 @@
   //
   // Settings
   //
-  var sitepath = 'http://placepeer.com'; //Where is the site located? If we need to reference images in JS (markers)
+  var sitepath = window.location.href; //Where is the site located? If we need to reference images in JS (markers)
 
   // Default values
   var searchLat = 55.596911;
@@ -270,11 +270,11 @@
   function addMarker(object) {
 
     // Set up markers
-    var markerImg = sitepath + '/graphics/marker-text.png';
+    var markerImg = sitepath + 'graphics/marker-text.png';
     if(object.video) {
-      markerImg = sitepath + '/graphics/marker-video.png';
+      markerImg = sitepath + 'graphics/marker-video.png';
     } else if(object.image) {
-      markerImg = sitepath + '/graphics/marker-image.png';
+      markerImg = sitepath + 'graphics/marker-image.png';
     }
 
     var image = new google.maps.MarkerImage(
@@ -285,7 +285,7 @@
     );
 
     var shadow = new google.maps.MarkerImage(
-      sitepath + '/graphics/marker-shadow.png',
+      sitepath + 'graphics/marker-shadow.png',
       new google.maps.Size(48,38),
       new google.maps.Point(0,0),
       new google.maps.Point(13,38)
