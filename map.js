@@ -30,7 +30,6 @@
   //
   // Settings
   //
-  var sitepath = window.location.href; //Where is the site located? If we need to reference images in JS (markers)
 
   // Default values
   var searchLat = 55.596911;
@@ -44,6 +43,7 @@
   //
   // Set up global variables and run map_init() as a callback.
   //
+  var sitepath = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
   var map;
   var initiated = false;
   var allYourNodes = {};
@@ -139,7 +139,9 @@
 
     // Max radius for flickr is 32 km.
     if(searchRadius > 32) {
-      searchRadius = 32;
+      flickrSearchRadius = 32;
+    } else {
+      flickrSearchRadius = searchRadius;
     }
 
     return jQuery.ajax({
@@ -155,7 +157,7 @@
         lon: searchLon,
         min_taken_date: date('Y-m-d', searchDate),
         max_taken_date: date('Y-m-d', searchDate),
-        radius: searchRadius + 'km'
+        radius: flickrSearchRadius + 'km'
       },
       dataType: 'jsonp'
     });
@@ -189,6 +191,10 @@
       date: date,
       url: url
     }
+  }
+
+  function serviceTimeout() {
+    return 'timeout';
   }
 
 
@@ -269,7 +275,6 @@
   }
 
   function addMarker(object) {
-
     // Set up markers
     var markerImg = sitepath + 'graphics/marker-text.png';
     if(object.video) {
