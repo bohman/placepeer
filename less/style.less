@@ -24,15 +24,7 @@ body {
   font-size: 13px;
 }
 
-html,
-body {
-  height: 100%;
-  position: relative;
-}
-
-div#header,
-div#timeline,
-div#footer {
+div#header {
   background: #fff;
   left: 0;
   position: fixed;
@@ -45,53 +37,65 @@ div#header {
   .boxShadow(0, 1px, 3px, rgba(0, 0, 0, 0.4));
   height: 63px;
   top: 0;
-  
+
   a#logo {
     display: block;
     float: left;
     height: 63px;
     width: 311px;
   }
-  
+
   div.dropdown {
-	  cursor: pointer;
+    cursor: pointer;
   }
 }
 
-div#list-wrapper {
+#list-wrapper {
   background: #fff;
-  height: 300px;
-  left: 20px;
+  left: 0;
   position: fixed;
-  top: 70px;
+  top: 63px;
+  bottom: 0;
   width: 200px;
   z-index: 100;
+  padding: 20px;
 }
 
-#timeline {
-  bottom: 120px;
-  height: 40px;
+#list-wrapper .tabs {
+  margin: -20px -20px 0;
+  background: #000;
+  margin-bottom: 20px;
+  text-align: center;
 }
 
-#footer {
+#list-wrapper .tabs li {
+  display: inline-block;
+}
+
+#list-wrapper .tabs a {
+  color: #fff;
+  padding: 10px;
+  display: inline-block;
+}
+
+#list-wrapper .always-show {
+  position: absolute;
+  left: 240px;
+  top: 0;
   bottom: 0;
-  height: 80px;
+  border-left: 1px solid #000;
+  background: #efefef;
+  padding: 10px;
 }
 
 #map {
-  height: 100%;
-  width: 100%;
+  position: absolute;
+  top: 63px;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 #map #map-canvas {
   height: 100%;
-}
-
-#controls {
-  position: absolute;
-  bottom: 40px;
-  right: 40px;
-  background: #fff;
-  padding: 20px;
-  border: 5px solid #222;
 }
