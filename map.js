@@ -30,7 +30,7 @@
   //
   // Settings
   //
-  var sitepath = 'http://placepeer.com'; //Where is the site located? If we need to reference images in JS (markers)
+  var sitepath = window.location.href; //Where is the site located? If we need to reference images in JS (markers)
 
   // Default values
   var searchLat = 55.596911;
@@ -100,7 +100,7 @@
     jQuery.when(
       getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate),
       getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate),
-      getYouTube(searchLat, searchLon, searchRadius, searchQuery, searchDate)
+      getYouTube(searchLat, searchLon, searchRadius, searchQuery)
     ).then(buildShit);
 
     initiated = true;
@@ -159,7 +159,7 @@
     });
   }
   
-  function getYouTube(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
+  function getYouTube(searchLat, searchLon, searchRadius, searchQuery) {
     var endpoint = 'https://gdata.youtube.com/feeds/api/videos';
 
     return jQuery.ajax({
@@ -172,8 +172,6 @@
         'location': searchLat + ',' + searchLon,
         'location-radius': searchRadius + 'km',
         'q': searchQuery,
-        //'published-min': date('Y-m-dT00:00:00', searchDate),
-        //'published-max': date('Y-m-dT23:59:59', searchDate)
       },
       dataType: 'jsonp'
     });
@@ -236,11 +234,11 @@
         addToAllYourNodes(id, lat, lon, text, image, video, date, url);
       });
     }
-    
+
     // Add YouTube results to allYourNodes.
     if (typeof youTubeResult[0]['feed']['entry'] == 'object') {
       $(youTubeResult[0]['feed']['entry']).each(function(index) {
-        if (this.georss$where) {
+        if (this.georss$where && window.date('Y-m-d', strtotime(this.published.$t)) == window.date('Y-m-d', searchDate)) {
           // Set the arguments.
           var id = 'youtube-' + index;
           var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
@@ -271,11 +269,11 @@
   function addMarker(object) {
 
     // Set up markers
-    var markerImg = sitepath + '/graphics/marker-text.png';
+    var markerImg = sitepath + 'graphics/marker-text.png';
     if(object.video) {
-      markerImg = sitepath + '/graphics/marker-video.png';
+      markerImg = sitepath + 'graphics/marker-video.png';
     } else if(object.image) {
-      markerImg = sitepath + '/graphics/marker-image.png';
+      markerImg = sitepath + 'graphics/marker-image.png';
     }
 
     var image = new google.maps.MarkerImage(
@@ -286,7 +284,7 @@
     );
 
     var shadow = new google.maps.MarkerImage(
-      sitepath + '/graphics/marker-shadow.png',
+      sitepath + 'graphics/marker-shadow.png',
       new google.maps.Size(48,38),
       new google.maps.Point(0,0),
       new google.maps.Point(13,38)
