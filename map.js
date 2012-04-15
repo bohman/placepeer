@@ -99,7 +99,7 @@
     jQuery.when(
       getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate),
       getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate),
-      getYouTube(searchLat, searchLon, searchRadius, searchQuery, searchDate)
+      getYouTube(searchLat, searchLon, searchRadius, searchQuery)
     ).then(buildShit);
 
     initiated = true;
@@ -158,7 +158,7 @@
     });
   }
   
-  function getYouTube(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
+  function getYouTube(searchLat, searchLon, searchRadius, searchQuery) {
     var endpoint = 'https://gdata.youtube.com/feeds/api/videos';
 
     return jQuery.ajax({
@@ -171,8 +171,6 @@
         'location': searchLat + ',' + searchLon,
         'location-radius': searchRadius + 'km',
         'q': searchQuery,
-        //'published-min': date('Y-m-dT00:00:00', searchDate),
-        //'published-max': date('Y-m-dT23:59:59', searchDate)
       },
       dataType: 'jsonp'
     });
@@ -235,11 +233,11 @@
         addToAllYourNodes(id, lat, lon, text, image, video, date, url);
       });
     }
-    
+
     // Add YouTube results to allYourNodes.
     if (typeof youTubeResult[0]['feed']['entry'] == 'object') {
       $(youTubeResult[0]['feed']['entry']).each(function(index) {
-        if (this.georss$where) {
+        if (this.georss$where && window.date('Y-m-d', strtotime(this.published.$t)) == window.date('Y-m-d', searchDate)) {
           // Set the arguments.
           var id = 'youtube-' + index;
           var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
