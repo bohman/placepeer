@@ -48,6 +48,7 @@
             <input type="text" name="searchQuery" class="searchQuery" value="<?php echo $_GET['searchQuery']; ?>" />
           </p>
           <p class="date">
+            <div class="datepicker"></div>
             <label for="searchDate">Date:</label>
             <input type="text" name="searchDate" class="searchDate" value="<?php echo $_GET['searchDate']; ?>" />
           </p>

@@ -23,5 +23,11 @@ jQuery(document).ready(function() {
     $('#list-wrapper').toggleClass('hidden');
     $('#map').toggleClass('sidebar-hidden');
   });
+
+  // Add datepicker
+  $('#filter .datepicker').datepicker({
+    dateFormat: 'yy-mm-dd',
+    onSelect: function(dateText, inst) { $('#controls .searchDate').val(dateText); }
+  });
   
 });
