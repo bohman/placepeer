@@ -158,8 +158,11 @@ div#header div.dropdown {
   position: absolute;
   top: 63px;
   bottom: 0;
-  left: 0;
+  left: 321px;
   right: 0;
+}
+#map.sidebar-hidden {
+  left: 80px;
 }
 #map #map-canvas {
   height: 100%;

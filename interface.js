@@ -20,7 +20,8 @@ jQuery(document).ready(function() {
   
   // Toggle the sidebar.
   $('#toggle-sidebar').click(function(event) {
-    $('#list-wrapper').toggleClass('hidden', 2000);
+    $('#list-wrapper').toggleClass('hidden');
+    $('#map').toggleClass('sidebar-hidden');
   });
   
 });
