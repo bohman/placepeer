@@ -25,34 +25,41 @@
     </div>
     <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4f53724c3a21b3bc"></script>
   </div>
-  
-  <!--<div id="list-wrapper">
-    en list-wrapper!
-  </div>-->
-  
+
+  <div id="list-wrapper">
+    <ul class="tabs">
+      <li><a href="#" data-tab="filter">Filter</a></li>
+      <li><a href="#" data-tab="list">Result overview</a></li>
+    </ul>
+    <div id="filter">
+      <form id="controls" method="get" action="<?php $_SERVER['REQUEST_URI']; ?>">
+        <p class="geo">
+          Jump to location
+          <input type="hidden" name="searchLat" class="searchLat" value="" />
+          <input type="hidden" name="searchLon" class="searchLon" value="" />
+          <input type="hidden" name="searchRadius" class="searchRadius" value="" />
+          <input type="hidden" name="mapZoomLevel" class="mapZoomLevel" value="" />
+        </p>
+        <p class="keyword">
+          <label for="searchQuery">Keyword:</label>
+          <input type="text" name="searchQuery" class="searchQuery" value="<?php echo $_GET['searchQuery']; ?>" />
+        </p>
+        <p class="date">
+          <label for="searchDate">Date:</label>
+          <input type="text" name="searchDate" class="searchDate" value="<?php echo $_GET['searchDate']; ?>" />
+        </p>
+        <div class="always-show">
+          zoom
+          <input class="submit" type="submit" value="Refresh" />
+        </div>
+      </form>
+    </div>
+    <div id="list">List goes here</div>
+  </div>
+
   <div id="map">
     <div id="map-canvas"></div>
   </div>
-
-  <form id="controls" method="get" action="<?php $_SERVER['REQUEST_URI']; ?>">
-    <p><label for="searchQuery">Query:</label> <input type="text" name="searchQuery" class="searchQuery" /></p>
-    <p><label for="searchDate">Date:</label> <input type="text" name="searchDate" class="searchDate" /></p>
-    <p>
-      <input type="hidden" name="searchLat" class="searchLat" value="" />
-      <input type="hidden" name="searchLon" class="searchLon" value="" />
-      <input type="hidden" name="searchRadius" class="searchRadius" value="" />
-      <input type="hidden" name="mapZoomLevel" class="mapZoomLevel" value="" />
-      <input class="submit" type="submit" value="Go" />
-    </p>
-  </form>
-
-  <!--<div id="timeline">
-    timeline
-  </div>-->
-
-  <!--<div id="footer">
-    footer
-  </div>-->
 
 <script type="text/javascript">
   var _gaq = _gaq || [];

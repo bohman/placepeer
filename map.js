@@ -410,6 +410,7 @@
     jQuery('#controls .searchLon').val(searchLon);
     jQuery('#controls .searchRadius').val(searchRadius);
     jQuery('#controls .mapZoomLevel').val(mapZoomLevel);
+    jQuery('#controls .searchDate').val(date('Y-m-d', searchDate));
   }
 
 
