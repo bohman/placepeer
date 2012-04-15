@@ -45,7 +45,6 @@
   // Set up global variables and run map_init() as a callback.
   //
   var map;
-  var geocoder = new google.maps.Geocoder();
   var initiated = false;
   var allYourNodes = {};
   var allYourMarkers = [];
@@ -412,6 +411,43 @@
     jQuery('#controls .searchDate').val(date('Y-m-d', searchDate));
     jQuery('#controls .jumpToLocation').val('');
   }
+
+
+  //
+  // initForm()
+  // Initialize form controls.
+  //
+  // TODO: Move to interface.js. Probably have to move map variables into a separate namespace.
+  //
+  var geocoder = new google.maps.Geocoder();
+  function initForm() {
+    $('#controls .jumpToLocation').autocomplete({
+      //This bit uses the geocoder to fetch address values
+      source: function(request, response) {
+        geocoder.geocode({ 'address': request.term }, function(results, status) {
+          response($.map(results, function(item) {
+            return {
+              label:  item.formatted_address,
+              value: item.formatted_address,
+              latitude: item.geometry.location.lat(),
+              longitude: item.geometry.location.lng()
+            }
+          }));
+        })
+      },
+      //This bit is executed upon selection of an address
+      select: function(event, ui) {
+        window.updateForm();
+        var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+        map.setCenter(location);
+      }
+    }).keydown(function(event){
+      if(event.keyCode == 13) {
+        event.preventDefault();
+        return false;
+      }
+    });
+  });
 
 
   //
