@@ -448,6 +448,7 @@
         updateForm();
         var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
         map.setCenter(location);
+        map.setZoom(13);
       }
     }).keydown(function(event){
       if(event.keyCode == 13) {
