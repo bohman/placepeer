@@ -195,61 +195,64 @@
   //
   function buildShit(twitterResult, flickrResult, youTubeResult) {
 
-    // TODO: Add error handling. If we get a crappy result
-    // we shouldn't kill everything.
-
     // Add twitter result to allYourNodes
-    $(twitterResult[0]['results']).each(function(index) {
-      if (this.geo) {
-        // Set the arguments.
-        var id = 'twitter-' + index;
-        var lat = this.geo.coordinates[0];
-        var lon = this.geo.coordinates[1];
-        var text = this.text;
-        var image = false;
-        var video = false;
-        var date = strtotime(this.created_at);
-        var url = 'https://twitter.com/' + this.from_user + '/status/' + this.id_str;
-        // Add media.
-        $(this.entities.media).each(function() {
-          if (this.type == 'photo' && !image) {
-            image = this.media_url + ':thumb';
-          }
-        });
-        addToAllYourNodes(id, lat, lon, text, image, video, date, url);
-      }
-    });
+    if (typeof twitterResult[0]['results'] == 'object') {
+      $(twitterResult[0]['results']).each(function(index) {
+        if (this.geo) {
+          // Set the arguments.
+          var id = 'twitter-' + index;
+          var lat = this.geo.coordinates[0];
+          var lon = this.geo.coordinates[1];
+          var text = this.text;
+          var image = false;
+          var video = false;
+          var date = strtotime(this.created_at);
+          var url = 'https://twitter.com/' + this.from_user + '/status/' + this.id_str;
+          // Add media.
+          $(this.entities.media).each(function() {
+            if (this.type == 'photo' && !image) {
+              image = this.media_url + ':thumb';
+            }
+          });
+          addToAllYourNodes(id, lat, lon, text, image, video, date, url);
+        }
+      });
+    }
 
     // Add flickr result to allYourNodes
-    $(flickrResult[0]['photos']['photo']).each(function(index) {
-      // Set the arguments.
-      var id = 'flickr-' + index;
-      var lat = this.latitude;
-      var lon = this.longitude;
-      var text = this.description._content;
-      var image = this.url_m;
-      var video = false;
-      var date = strtotime(this.datetaken);
-      var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
-      addToAllYourNodes(id, lat, lon, text, image, video, date, url);
-    });
+    if (flickrResult[0].stat == 'ok' && typeof flickrResult[0]['photos']['photo'] == 'object') {
+      $(flickrResult[0]['photos']['photo']).each(function(index) {
+        // Set the arguments.
+        var id = 'flickr-' + index;
+        var lat = this.latitude;
+        var lon = this.longitude;
+        var text = this.description._content;
+        var image = this.url_m;
+        var video = false;
+        var date = strtotime(this.datetaken);
+        var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
+        addToAllYourNodes(id, lat, lon, text, image, video, date, url);
+      });
+    }
     
     // Add YouTube results to allYourNodes.
-    $(youTubeResult[0]['feed']['entry']).each(function(index) {
-      if (this.georss$where) {
-        // Set the arguments.
-        var id = 'youtube-' + index;
-        var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
-        var lat = coordinates[0];
-        var lon = coordinates[1];
-        var text = this.title.$t;
-        var image = false;
-        var video = '<object width="280" height="210"><param name="movie" value="' + this.content.src + '"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + this.content.src + '" type="application/x-shockwave-flash" width="280" height="210" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
-        var date = strtotime(this.published.$t);
-        var url = this.link[0].href;
-        addToAllYourNodes(id, lat, lon, text, image, video, date, url);
-      }
-    });
+    if (typeof youTubeResult[0]['feed']['entry'] == 'object') {
+      $(youTubeResult[0]['feed']['entry']).each(function(index) {
+        if (this.georss$where) {
+          // Set the arguments.
+          var id = 'youtube-' + index;
+          var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
+          var lat = coordinates[0];
+          var lon = coordinates[1];
+          var text = this.title.$t;
+          var image = false;
+          var video = '<object width="280" height="210"><param name="movie" value="' + this.content.src + '"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + this.content.src + '" type="application/x-shockwave-flash" width="280" height="210" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
+          var date = strtotime(this.published.$t);
+          var url = this.link[0].href;
+          addToAllYourNodes(id, lat, lon, text, image, video, date, url);
+        }
+      });
+    }
 
     // Use allYourNodes to add markers to map and build list
     jQuery.each(allYourNodes, function(index) {
