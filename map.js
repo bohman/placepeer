@@ -30,7 +30,7 @@
   //
   // Settings
   //
-  var sitepath = ''; //Where is the site located? If we need to reference images in JS (markers)
+  var sitepath = 'http://placepeer.com'; //Where is the site located? If we need to reference images in JS (markers)
 
   // Default values
   var searchLat = 55.596911;
@@ -83,6 +83,7 @@
     }
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
+    // Add markers
     doShit();
   }
 
@@ -267,17 +268,48 @@
   }
 
   function addMarker(object) {
+
+    // Set up markers
+    var markerImg = sitepath + '/graphics/marker-text.png';
+    if(object.video) {
+      markerImg = sitepath + '/graphics/marker-video.png';
+    } else if(object.image) {
+      markerImg = sitepath + '/graphics/marker-image.png';
+    }
+
+    var image = new google.maps.MarkerImage(
+      markerImg,
+      new google.maps.Size(26,38),
+      new google.maps.Point(0,0),
+      new google.maps.Point(13,38)
+    );
+
+    var shadow = new google.maps.MarkerImage(
+      sitepath + '/graphics/marker-shadow.png',
+      new google.maps.Size(48,38),
+      new google.maps.Point(0,0),
+      new google.maps.Point(13,38)
+    );
+
+    var shape = {
+      coord: [17,0,19,1,20,2,21,3,22,4,23,5,23,6,24,7,24,8,24,9,24,10,25,11,25,12,25,13,24,14,24,15,24,16,24,17,23,18,23,19,23,20,22,21,21,22,21,23,20,24,19,25,19,26,18,27,17,28,16,29,16,30,15,31,15,32,14,33,14,34,14,35,14,36,14,37,11,37,11,36,10,35,10,34,10,33,9,32,9,31,8,30,8,29,7,28,6,27,6,26,5,25,4,24,4,23,3,22,2,21,2,20,1,19,1,18,0,17,0,16,0,15,0,14,0,13,0,12,0,11,0,10,0,9,0,8,0,7,1,6,2,5,2,4,3,3,4,2,5,1,7,0,17,0],
+      type: 'poly'
+    };
+
     // Create the location.
     var location = new google.maps.LatLng(object.lat, object.lon);
-    
+
     // Add a marker.
     var marker = new google.maps.Marker({
       position: location,
       map: map,
+      icon: image,
+      shadow: shadow,
+      shape: shape,
       title: object.text
     });
     allYourMarkers.push(marker);
-    
+
     // Add an info window.
     var content = '<strong>' + object.text + '</strong>';
     if (object.image) {
@@ -292,7 +324,7 @@
       content: content
     });
     allYourInfoWindows.push(infoWindow);
-    
+
     // Open the info window on click.
     google.maps.event.addListener(marker, 'click', function() {
       $(allYourInfoWindows).each(function() {
@@ -343,19 +375,16 @@
 
   //
   // getCurrentRadius()
-  // Gives you current radius of map in miles
+  // Gives you current radius of map
   //
   function getCurrentRadius() {
     var bounds = map.getBounds();
-
     var center = bounds.getCenter();
     var ne = bounds.getNorthEast();
-
-    // r = radius of the earth in statute miles
-    var r = 3963.0;  
+    var r = 3963.0; // r = radius of the earth in statute miles
 
     // Convert lat or lng from decimal degrees into radians (divide by 57.2958)
-    var lat1 = center.lat() / 57.2958; 
+    var lat1 = center.lat() / 57.2958;
     var lon1 = center.lng() / 57.2958;
     var lat2 = ne.lat() / 57.2958;
     var lon2 = ne.lng() / 57.2958;
@@ -373,8 +402,8 @@
   //
   function updateForm() {
     var curLatLon = map.getCenter();
-    searchLat = curLatLon['Xa'];
-    searchLon = curLatLon['Ya'];
+    searchLat = curLatLon.lat();
+    searchLon = curLatLon.lng();
     searchRadius = getCurrentRadius();
     mapZoomLevel = map.getZoom();
     jQuery('#controls .searchLat').val(searchLat);
