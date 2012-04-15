@@ -45,6 +45,7 @@
   // Set up global variables and run map_init() as a callback.
   //
   var map;
+  var geocoder = new google.maps.Geocoder();
   var initiated = false;
   var allYourNodes = {};
   var allYourMarkers = [];
@@ -411,6 +412,7 @@
     jQuery('#controls .searchRadius').val(searchRadius);
     jQuery('#controls .mapZoomLevel').val(mapZoomLevel);
     jQuery('#controls .searchDate').val(date('Y-m-d', searchDate));
+    jQuery('#controls .jumpToLocation').val('');
   }
 
 

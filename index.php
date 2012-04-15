@@ -6,6 +6,7 @@
   <link rel='stylesheet' id='placepeer-css'  href='css/style.css' type='text/css' media='all' />
   <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCBZ5stPtmfRqLgbtjwd-SCGApkG_OlnDU&sensor=false"></script>
+  <script type='text/javascript' src='jqueryuicustom.js'></script>
   <script type='text/javascript' src='utils.js'></script>
   <script type='text/javascript' src='map.js'></script>
   <script type='text/javascript' src='interface.js'></script>
@@ -34,7 +35,8 @@
     <div id="filter">
       <form id="controls" method="get" action="<?php $_SERVER['REQUEST_URI']; ?>">
         <p class="geo">
-          Jump to location
+          <label for="jumpToLocation">Jump to location:</label>
+          <input type="text" name="jumpToLocation" class="jumpToLocation" />
           <input type="hidden" name="searchLat" class="searchLat" value="" />
           <input type="hidden" name="searchLon" class="searchLon" value="" />
           <input type="hidden" name="searchRadius" class="searchRadius" value="" />
