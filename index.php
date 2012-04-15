@@ -27,34 +27,39 @@
   </div>
 
   <div id="list-wrapper">
-    <ul class="tabs">
-      <li><a href="#" data-tab="filter">Filter</a></li>
-      <li><a href="#" data-tab="list">Result overview</a></li>
-    </ul>
-    <div id="filter">
-      <form id="controls" method="get" action="<?php $_SERVER['REQUEST_URI']; ?>">
-        <p class="geo">
-          Jump to location
-          <input type="hidden" name="searchLat" class="searchLat" value="" />
-          <input type="hidden" name="searchLon" class="searchLon" value="" />
-          <input type="hidden" name="searchRadius" class="searchRadius" value="" />
-          <input type="hidden" name="mapZoomLevel" class="mapZoomLevel" value="" />
-        </p>
-        <p class="keyword">
-          <label for="searchQuery">Keyword:</label>
-          <input type="text" name="searchQuery" class="searchQuery" value="<?php echo $_GET['searchQuery']; ?>" />
-        </p>
-        <p class="date">
-          <label for="searchDate">Date:</label>
-          <input type="text" name="searchDate" class="searchDate" value="<?php echo $_GET['searchDate']; ?>" />
-        </p>
-        <div class="always-show">
-          zoom
-          <input class="submit" type="submit" value="Refresh" />
+    <form id="controls" method="get" action="<?php $_SERVER['REQUEST_URI']; ?>">
+      <ul class="tabs">
+        <li><a href="#" data-tab="filter" class="active">Filter</a></li>
+        <li><a href="#" data-tab="list">Result overview</a></li>
+      </ul>
+      <div id="tab-content">
+        <div id="filter">
+          <p class="geo">
+            Jump to location
+            <input type="hidden" name="searchLat" class="searchLat" value="" />
+            <input type="hidden" name="searchLon" class="searchLon" value="" />
+            <input type="hidden" name="searchRadius" class="searchRadius" value="" />
+            <input type="hidden" name="mapZoomLevel" class="mapZoomLevel" value="" />
+          </p>
+          <p class="keyword">
+            <label for="searchQuery">Keyword:</label>
+            <input type="text" name="searchQuery" class="searchQuery" value="<?php echo $_GET['searchQuery']; ?>" />
+          </p>
+          <p class="date">
+            <label for="searchDate">Date:</label>
+            <input type="text" name="searchDate" class="searchDate" value="<?php echo $_GET['searchDate']; ?>" />
+          </p>
         </div>
-      </form>
-    </div>
-    <div id="list">List goes here</div>
+        <div id="list">
+          List goes here
+        </div>
+      </div>
+      <div class="always-show">
+        <a href="#" id="toggle-sidebar">Toggle</a>
+        zoom
+        <input class="submit" type="submit" value="Refresh" />
+      </div>
+    </form>
   </div>
 
   <div id="map">
