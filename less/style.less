@@ -1,5 +1,6 @@
 @import 'classes.less';
 
+
 /* RESET ------------------*/
 html, body, div, span,
 applet, object, iframe,
@@ -16,7 +17,7 @@ ol, ul {list-style: none;}
 q:before, q:after, blockquote:before, blockquote:after {content: '';}
 
 
-/* THEME STYLING ---------------- */
+/* GENERAL STYLING ---------------- */
 body {
   background-color: #fff;
   font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -24,6 +25,8 @@ body {
   font-size: 13px;
 }
 
+
+/* Header */
 #header {
   left: 0;
   position: fixed;
@@ -66,36 +69,57 @@ body {
   vertical-align: middle;
 }
 
+
+/* Forms & list */
+input[type="text"] {
+  border: 1px solid #d1d1d1;
+  border-radius: 50px;
+  background: #fff url('../graphics/search-icon.png') 5px center no-repeat;
+  padding: 5px 5px 5px 25px;
+  -moz-box-shadow: inset 0px 2px 6px #8c8c8c;
+  -webkit-box-shadow: inset 0px 2px 6px #8c8c8c;
+  box-shadow: inset 0px 2px 6px #8c8c8c;
+}
+
+.form-item {
+  padding: 20px;
+  background: #ffffff;
+  background: -moz-linear-gradient(top,  #ffffff 0%, #cfd6e6 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#cfd6e6));
+  background: -webkit-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  background: -o-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  background: -ms-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  background: linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cfd6e6',GradientType=0 );
+}
+
 #list-wrapper {
   background: #fff;
   left: 0;
   position: fixed;
   top: 60px;
   bottom: 0;
-  width: 200px;
+  width: 240px;
   z-index: 100;
-  padding: 20px;
+
+  .tabs {
+    background: #000;
+    text-align: center;
+
+    li {
+      display: inline-block;
+    }
+
+    a {
+      color: #fff;
+      padding: 10px;
+      display: inline-block;
+    }
+  }
 }
 
 #list-wrapper.hidden {
   left: -241px;
-}
-
-#list-wrapper .tabs {
-  margin: -20px -20px 0;
-  background: #000;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-#list-wrapper .tabs li {
-  display: inline-block;
-}
-
-#list-wrapper .tabs a {
-  color: #fff;
-  padding: 10px;
-  display: inline-block;
 }
 
 #list-wrapper .always-show {
@@ -108,20 +132,117 @@ body {
   padding: 10px;
 }
 
-#map {
-  position: absolute;
-  top: 60px;
-  bottom: 0;
-  left: 321px;
-  right: 0;
+.form-item.date {
+  padding: 0;
+  background: transparent;
 }
 
-#map.sidebar-hidden {
-  left: 80px;
+.form-item.date > label,
+.form-item.date > input {
+  display: none;
 }
 
-#map #map-canvas {
-  height: 100%;
+.ui-datepicker-header {
+  overflow: hidden;
+  background: #ffffff;
+  background: -moz-linear-gradient(top,  #ffffff 0%, #cfd6e6 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#cfd6e6));
+  background: -webkit-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  background: -o-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  background: -ms-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  background: linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cfd6e6',GradientType=0 );
+}
+
+.ui-datepicker-header .ui-datepicker-prev,
+.ui-datepicker-header .ui-datepicker-next,
+.ui-datepicker-header .ui-datepicker-title {
+  text-align: center;
+  font-weight: bold;
+  display: inline-block;
+  padding: 17px 0;
+}
+
+.ui-datepicker-header .ui-datepicker-title {
+  width: 40%;
+}
+
+.ui-datepicker-header .ui-datepicker-prev,
+.ui-datepicker-header .ui-datepicker-next {
+  width: 30%;
+  float: left;
+  cursor: pointer;
+  background: #c3c9d9;
+  background: -moz-linear-gradient(top,  #c3c9d9 0%, #8a8e99 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#c3c9d9), color-stop(100%,#8a8e99));
+  background: -webkit-linear-gradient(top,  #c3c9d9 0%,#8a8e99 100%);
+  background: -o-linear-gradient(top,  #c3c9d9 0%,#8a8e99 100%);
+  background: -ms-linear-gradient(top,  #c3c9d9 0%,#8a8e99 100%);
+  background: linear-gradient(top,  #c3c9d9 0%,#8a8e99 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#c3c9d9', endColorstr='#8a8e99',GradientType=0 );
+}
+
+.ui-datepicker-header .ui-datepicker-prev:focus,
+.ui-datepicker-header .ui-datepicker-next:focus,
+.ui-datepicker-header .ui-datepicker-prev:hover,
+.ui-datepicker-header .ui-datepicker-next:hover {
+  background: #b5bbc9;
+  background: -moz-linear-gradient(top,  #b5bbc9 0%, #7d7f89 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#b5bbc9), color-stop(100%,#7d7f89));
+  background: -webkit-linear-gradient(top,  #b5bbc9 0%,#7d7f89 100%);
+  background: -o-linear-gradient(top,  #b5bbc9 0%,#7d7f89 100%);
+  background: -ms-linear-gradient(top,  #b5bbc9 0%,#7d7f89 100%);
+  background: linear-gradient(top,  #b5bbc9 0%,#7d7f89 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b5bbc9', endColorstr='#7d7f89',GradientType=0 );
+}
+
+.ui-datepicker-header .ui-datepicker-next {
+  float: right;
+}
+
+.ui-datepicker-calendar {
+  width: 100%;
+}
+
+.ui-datepicker-calendar th,
+.ui-datepicker-calendar td {
+  background: #d1d8e7;
+  color: #54565c;
+  vertical-align: middle;
+  font-weight: bold;
+  text-align: center;
+}
+
+.ui-datepicker-calendar th span,
+.ui-datepicker-calendar td a {
+  height: 35px;
+  display: table-cell;
+  width: 33px;
+  vertical-align: middle;
+  text-align: center;
+  border-top: 1px solid #eae9ff;
+  border-right: 1px solid #eae9ff;
+  border-left: 1px solid #a1a6b3;
+  border-bottom: 1px solid #a1a6b3;
+}
+
+.ui-datepicker-calendar td a {
+  font-size: 20px;
+  text-decoration: none;
+  color: #737680;
+  text-shadow: 0 -1px 1px #393b40, 0 1px 1px #fff;
+  font-weight: normal;
+}
+
+.ui-datepicker-calendar td a:hover,
+.ui-datepicker-calendar td a:focus {
+  background-color: #BBC2D1;
+  border-top-color: #C8D1E4;
+  border-right-color: #C8D1E4;
+}
+
+.ui-datepicker-calendar td a.ui-state-active {
+  background: #d1d8e7 url('../graphics/calendar-active.png') top left no-repeat;
 }
 
 .ui-autocomplete {
@@ -162,4 +283,22 @@ body {
 
 .submit:active {
   background: #BB2B00;
+}
+
+
+/* Map */
+#map {
+  position: absolute;
+  top: 60px;
+  bottom: 0;
+  left: 321px;
+  right: 0;
+}
+
+#map.sidebar-hidden {
+  left: 80px;
+}
+
+#map #map-canvas {
+  height: 100%;
 }

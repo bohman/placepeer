@@ -33,23 +33,23 @@
       </ul>
       <div id="tab-content">
         <div id="filter">
-          <p class="geo">
+          <div class="form-item geo">
             <label for="jumpToLocation">Jump to location:</label>
             <input type="text" name="jumpToLocation" class="jumpToLocation" />
             <input type="hidden" name="searchLat" class="searchLat" value="" />
             <input type="hidden" name="searchLon" class="searchLon" value="" />
             <input type="hidden" name="searchRadius" class="searchRadius" value="" />
             <input type="hidden" name="mapZoomLevel" class="mapZoomLevel" value="" />
-          </p>
-          <p class="keyword">
+          </div>
+          <div class="form-item keyword">
             <label for="searchQuery">Keyword:</label>
             <input type="text" name="searchQuery" class="searchQuery" value="<?php echo $_GET['searchQuery']; ?>" />
-          </p>
-          <p class="date">
+          </div>
+          <div class="form-item date">
             <div class="datepicker"></div>
             <label for="searchDate">Date:</label>
             <input type="text" name="searchDate" class="searchDate" value="<?php echo $_GET['searchDate']; ?>" />
-          </p>
+          </div>
         </div>
         <div id="list">
           List goes here
