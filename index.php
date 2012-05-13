@@ -7,7 +7,7 @@
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCBZ5stPtmfRqLgbtjwd-SCGApkG_OlnDU&sensor=false"></script>
   <script type="text/javascript" src="js/jqueryuicustom.js"></script>
-  <?php <script type="text/javascript" src="js/jquery.noisy.min.js"></script> */ ?>
+  <?php /* <script type="text/javascript" src="js/jquery.noisy.min.js"></script> */ ?>
   <script type="text/javascript" src="js/pp-utils.js"></script>
   <script type="text/javascript" src="js/pp-map.js"></script>
   <script type="text/javascript" src="js/pp-interface.js"></script>
