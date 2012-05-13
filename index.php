@@ -3,21 +3,18 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Placepeer</title>
-  <link rel='stylesheet' id='placepeer-css'  href='css/style.css' type='text/css' media='all' />
-  <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
+  <link rel="stylesheet" id="placepeer-css"  href="css/style.css" type="text/css" media="all" />
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCBZ5stPtmfRqLgbtjwd-SCGApkG_OlnDU&sensor=false"></script>
-  <script type='text/javascript' src='jqueryuicustom.js'></script>
-  <script type='text/javascript' src='utils.js'></script>
-  <script type='text/javascript' src='map.js'></script>
-  <script type='text/javascript' src='interface.js'></script>
+  <script type="text/javascript" src="jqueryuicustom.js"></script>
+  <script type="text/javascript" src="utils.js"></script>
+  <script type="text/javascript" src="map.js"></script>
+  <script type="text/javascript" src="interface.js"></script>
 </head>
 <body>
   
   <div id="header">
     <a id="logo" href=""><img src="graphics/logo.png"></a>
-    <div class="dropdown">
-      List
-    </div>
     <div class="addthis_toolbox addthis_default_style ">
       <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
       <a class="addthis_button_tweet"></a>
