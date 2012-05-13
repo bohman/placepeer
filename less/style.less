@@ -25,32 +25,52 @@ body {
 }
 
 #header {
-  background: #fff;
   left: 0;
   position: fixed;
   width: 100%;
   z-index: 100;
-}
-
-#header {
-  background: #ccc;
+  background: #48b9fe;
+  background: -moz-linear-gradient(top,  #48b9fe 0%, #303ebf 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#48b9fe), color-stop(100%,#303ebf));
+  background: -webkit-linear-gradient(top,  #48b9fe 0%,#303ebf 100%);
+  background: -o-linear-gradient(top,  #48b9fe 0%,#303ebf 100%);
+  background: -ms-linear-gradient(top,  #48b9fe 0%,#303ebf 100%);
+  background: linear-gradient(top,  #48b9fe 0%,#303ebf 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#48b9fe', endColorstr='#303ebf',GradientType=0 );
   .boxShadow(0, 1px, 3px, rgba(0, 0, 0, 0.4));
-  height: 63px;
+  height: 60px;
   top: 0;
   z-index: 9999;
+
   #logo {
-    display: block;
-    float: left;
-    height: 63px;
-    width: 311px;
+    background: transparent url('../graphics/logo-icon.png') left center no-repeat;
+    display: inline-block;
+    width: 305px;
+
+    b {
+      background: transparent url('../graphics/logo-text.png') right center no-repeat;
+      display: block;
+      text-indent: -99999em;
+      height: 60px;
+    }
   }
+
+  .addthis_toolbox {
+    margin-top: 5px;
+    margin-left: 100px;
+  }
+}
+
+#header > * {
+  display: inline-block;
+  vertical-align: middle;
 }
 
 #list-wrapper {
   background: #fff;
   left: 0;
   position: fixed;
-  top: 63px;
+  top: 60px;
   bottom: 0;
   width: 200px;
   z-index: 100;
@@ -90,7 +110,7 @@ body {
 
 #map {
   position: absolute;
-  top: 63px;
+  top: 60px;
   bottom: 0;
   left: 321px;
   right: 0;
