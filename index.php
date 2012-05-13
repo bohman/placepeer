@@ -3,21 +3,19 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Placepeer</title>
-  <link rel='stylesheet' id='placepeer-css'  href='css/style.css' type='text/css' media='all' />
-  <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
+  <link rel="stylesheet" id="placepeer-css"  href="css/style.css" type="text/css" media="all" />
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCBZ5stPtmfRqLgbtjwd-SCGApkG_OlnDU&sensor=false"></script>
-  <script type='text/javascript' src='jqueryuicustom.js'></script>
-  <script type='text/javascript' src='utils.js'></script>
-  <script type='text/javascript' src='map.js'></script>
-  <script type='text/javascript' src='interface.js'></script>
+  <script type="text/javascript" src="js/jqueryuicustom.js"></script>
+  <?php /* <script type="text/javascript" src="js/jquery.noisy.min.js"></script> */ ?>
+  <script type="text/javascript" src="js/pp-utils.js"></script>
+  <script type="text/javascript" src="js/pp-map.js"></script>
+  <script type="text/javascript" src="js/pp-interface.js"></script>
 </head>
 <body>
   
   <div id="header">
-    <a id="logo" href=""><img src="graphics/logo.png"></a>
-    <div class="dropdown">
-      List
-    </div>
+    <a id="logo" href="/"><b>Placepeer</b></a>
     <div class="addthis_toolbox addthis_default_style ">
       <a class="addthis_button_facebook_like" fb:like:layout="button_count"></a>
       <a class="addthis_button_tweet"></a>
@@ -35,23 +33,23 @@
       </ul>
       <div id="tab-content">
         <div id="filter">
-          <p class="geo">
+          <div class="form-item geo">
             <label for="jumpToLocation">Jump to location:</label>
             <input type="text" name="jumpToLocation" class="jumpToLocation" />
             <input type="hidden" name="searchLat" class="searchLat" value="" />
             <input type="hidden" name="searchLon" class="searchLon" value="" />
             <input type="hidden" name="searchRadius" class="searchRadius" value="" />
             <input type="hidden" name="mapZoomLevel" class="mapZoomLevel" value="" />
-          </p>
-          <p class="keyword">
+          </div>
+          <div class="form-item keyword">
             <label for="searchQuery">Keyword:</label>
             <input type="text" name="searchQuery" class="searchQuery" value="<?php echo $_GET['searchQuery']; ?>" />
-          </p>
-          <p class="date">
+          </div>
+          <div class="form-item date">
             <div class="datepicker"></div>
             <label for="searchDate">Date:</label>
             <input type="text" name="searchDate" class="searchDate" value="<?php echo $_GET['searchDate']; ?>" />
-          </p>
+          </div>
         </div>
         <div id="list">
           List goes here

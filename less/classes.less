@@ -16,25 +16,25 @@
 }
 
 .gradient(@color: #CCCCCC, @lighten: 10%, @darken: 10%) {
-	background-image: linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken));
-	background-image: -o-linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken));
-	background-image: -moz-linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken));
-	background-image: -webkit-linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken));
-	background-image: -ms-linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken));	
-	
-	background-image: -webkit-gradient(
-		linear,
-		left top,
-		left bottom,
-		color-stop(0.17, lighten(@color, @lighten)),
-		color-stop(1, darken(@color, @darken))
-	);
+  background-image: linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken));
+  background-image: -o-linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken));
+  background-image: -moz-linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken));
+  background-image: -webkit-linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken));
+  background-image: -ms-linear-gradient(top, lighten(@color, @lighten), darken(@color, @darken)); 
+  
+  background-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0.17, lighten(@color, @lighten)),
+    color-stop(1, darken(@color, @darken))
+  );
 }
 
 .roundedCorners(@radius: 3px) {
   border-radius: @radius;
   -moz-border-radius: @radius;
-	-webkit-border-radius: @radius;
+  -webkit-border-radius: @radius;
 }
 
 .textShadow(@x: 0px, @y: 1px, @blur: 0px, @color: #444) {
