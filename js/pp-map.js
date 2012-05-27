@@ -297,8 +297,11 @@
 
     // Use allYourNodes to add markers to map and build list
     jQuery.each(allYourNodes, function(index) {
-      addMarker(this);
-      addListItem(this);
+      var marker = addMarker(this);
+      var $listItem = addListItem(this);
+      $listItem.click(function() {
+        google.maps.event.trigger(marker, 'click');
+      });
     });
 
     // Update form and set map events
@@ -404,6 +407,8 @@
       infoWindow.setContent(text + images + videos + links);
     });
 
+    object.marker = marker;
+    return marker;
   }
   
   function addListItem(object) {
@@ -419,11 +424,15 @@
       videos.push(object.video);
     }
     
-    sender = '<h3 class="sender">' + text + '</div>';
+    sender = '<h3 class="sender">' + text + '</h3>';
     text = '<p class="text">' + text + '</p>';
     images = '<ul class="images"><li>' + images.join('</li><li>') + '</li></ul>';
     videos = '<ul class="videos"><li>' + videos.join('</li><li>') + '</li></ul>';
-    $('#list').append('<div class="item-wrapper">' + sender + text + images + videos + '</div>');
+    
+    $listItem = $('<div id="' + object.id + '" class="item-wrapper">' + sender + text + images + videos + '</div>').appendTo('#list');
+    
+    object.$listItem = $listItem;
+    return $listItem;
   }
 
 
