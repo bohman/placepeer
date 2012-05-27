@@ -48,19 +48,31 @@ body {
   #logo {
     background: transparent url('../graphics/logo-icon.png') left center no-repeat;
     display: inline-block;
-    width: 305px;
+    padding-left: 60px;
 
     b {
       background: transparent url('../graphics/logo-text.png') right center no-repeat;
-      display: block;
+      display: inline-block;
+      width: 239px;
       text-indent: -99999em;
       height: 60px;
+      vertical-align: middle;
+    }
+    p {
+      display: inline-block;
+      vertical-align: middle;
+      color: #f5f5f5;
+      line-height: 1.5;
+      font-size: 8pt;
+      font-style: italic;
     }
   }
 
   .addthis_toolbox {
-    margin-top: 5px;
-    margin-left: 100px;
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    margin-top: -16px;
   }
 }
 
@@ -100,17 +112,25 @@ input[type="text"] {
 #list-wrapper {
   background: #fff;
   left: 0;
-  position: fixed;
+  position: absolute;
   top: 60px;
   bottom: 0;
   width: 240px;
   z-index: 100;
+
+  #tab-content {
+    position: absolute;
+    top: 54px;
+    bottom: 0;
+    overflow: scroll;
+  }
 
   .tabs {
     text-align: center;
     font-weight: bold;
     overflow: hidden;
     background: #ffffff;
+    height: 53px;
 
     li {
       display: block;
@@ -163,6 +183,7 @@ input[type="text"] {
   top: 0;
   bottom: 0;
   border-left: 1px solid #bec2cd;
+  border-right: 1px solid #bec2cd;
   padding: 10px;
   background: #ffffff;
   background: -moz-linear-gradient(top,  #ffffff 0%, #cfd6e6 100%);
@@ -427,18 +448,73 @@ input[type="text"] {
   background: #BB2B00;
 }
 
+/* Result list */
+#list {
+  overflow: scroll;
+
+  .item {
+    float: left;
+    width: 50%;
+    overflow: hidden;
+    height: 90px;
+    outline: 1px solid #bec2cd;
+    position: relative;
+
+    .content {
+      overflow: hidden;
+      background: #d1d8e7;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .pseudo-image {
+      font-family: Georgia, serif;
+      font-weight: normal;
+      font-size: 15px;
+      padding: 5px;
+      height: 69px;
+      color: #9397A8;
+      text-shadow: 0 1px 1px #fff;
+    }
+
+    .user {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 5px;
+      font-weight: bold;
+      background: #ffffa3;
+      font-size: 12px;
+    }
+  }
+
+  .item:nth-child(2n+2) {
+    border-left: 0
+  }
+
+  .item:hover .content {
+    background: #BBC2D1;
+    cursor: pointer;
+  }
+
+}
+
 
 /* Map ----------------------- */
 #map {
   position: absolute;
   top: 60px;
   bottom: 0;
-  left: 321px;
+  left: 301px;
   right: 0;
 }
 
 #map.sidebar-hidden {
-  left: 80px;
+  left: 60px;
 }
 
 #map #map-canvas {
