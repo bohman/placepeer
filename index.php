@@ -3,8 +3,8 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Placepeer</title>
-  <link rel="stylesheet" id="placepeer-css"  href="css/style.css" type="text/css" media="all" />
   <link rel="stylesheet" id="jquery-ui-css"  href="css/zoomer-base/jquery-ui-1.8.20.custom.css" type="text/css" media="all" />
+  <link rel="stylesheet" id="placepeer-css"  href="css/style.css" type="text/css" media="all" />
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCBZ5stPtmfRqLgbtjwd-SCGApkG_OlnDU&sensor=false"></script>
   <script type="text/javascript" src="js/jqueryuicustom.js"></script>
@@ -29,21 +29,21 @@
   <div id="list-wrapper">
     <form id="controls" method="get" action="<?php $_SERVER['REQUEST_URI']; ?>">
       <ul class="tabs">
-        <li><a href="#" data-tab="filter" class="active">Filter</a></li>
-        <li><a href="#" data-tab="list">Result overview</a></li>
+        <li><a href="#" data-tab="filter" class="active">Search</a></li>
+        <li><a href="#" data-tab="list">Results</a></li>
       </ul>
       <div id="tab-content">
         <div id="filter">
           <div class="form-item geo">
             <label for="jumpToLocation">Jump to location:</label>
-            <input type="text" name="jumpToLocation" class="jumpToLocation" />
+            <input type="text" name="jumpToLocation" class="jumpToLocation" placeholder="Jump to location" />
             <input type="hidden" name="searchLat" class="searchLat" value="" />
             <input type="hidden" name="searchLon" class="searchLon" value="" />
             <input type="hidden" name="searchRadius" class="searchRadius" value="" />
           </div>
           <div class="form-item keyword">
-            <label for="searchQuery">Keyword:</label>
-            <input type="text" name="searchQuery" class="searchQuery" value="<?php echo $_GET['searchQuery']; ?>" />
+            <label for="searchQuery">Search for keyword:</label>
+            <input type="text" name="searchQuery" class="searchQuery" value="<?php echo $_GET['searchQuery']; ?>" placeholder="Search for keyword" />
           </div>
           <div class="form-item date">
             <div class="datepicker"></div>
@@ -59,7 +59,7 @@
           <label for="zoom">Zoom:</label>
           <input type="text" name="mapZoomLevel" class="mapZoomLevel" value="" />
         </div>
-        <input class="submit" type="submit" value="Refresh" />
+        <input class="submit" type="submit" value="Go!" />
       </div>
     </form>
   </div>

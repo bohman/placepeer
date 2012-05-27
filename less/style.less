@@ -82,7 +82,7 @@ input[type="text"] {
 }
 
 .form-item {
-  padding: 20px;
+  padding: 20px 5%;
   background: #ffffff;
   background: -moz-linear-gradient(top,  #ffffff 0%, #cfd6e6 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#cfd6e6));
@@ -103,17 +103,38 @@ input[type="text"] {
   z-index: 100;
 
   .tabs {
-    background: #000;
     text-align: center;
+    overflow: hidden;
+    background: #ffffff;
+    background: -moz-linear-gradient(top,  #ffffff 0%, #cfd6e6 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#cfd6e6));
+    background: -webkit-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+    background: -o-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+    background: -ms-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+    background: linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cfd6e6',GradientType=0 );
 
     li {
-      display: inline-block;
+      display: block;
+      width: 50%;
+      float: left;
     }
 
     a {
-      color: #fff;
-      padding: 10px;
+      text-decoration: none;
+      width: 80%;
+      color: #4e4e4e;
+      padding: 20px 10%;
       display: inline-block;
+    }
+
+    a:hover,
+    a:focus {
+      background: rgba(245, 255, 165, 0.2);
+    }
+
+    a.active {
+      background: #ffffa3;
     }
   }
 }
@@ -127,9 +148,16 @@ input[type="text"] {
   left: 240px;
   top: 0;
   bottom: 0;
-  border-left: 1px solid #000;
-  background: #efefef;
+  border-left: 1px solid #bec2cd;
   padding: 10px;
+  background: #ffffff;
+  background: -moz-linear-gradient(top,  #ffffff 0%, #cfd6e6 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#cfd6e6));
+  background: -webkit-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  background: -o-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  background: -ms-linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  background: linear-gradient(top,  #ffffff 0%,#cfd6e6 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cfd6e6',GradientType=0 );
 }
 
 .form-item.date {
@@ -261,6 +289,59 @@ input[type="text"] {
   background: #efefef;
 }
 
+.zoom {
+  text-align: center;
+  position: relative;
+  padding: 32px 0 37px;
+}
+
+.zoom .mapZoomer {
+  height: 300px;
+  border: 0;
+}
+
+.zoom .ui-slider-vertical {
+  display: inline-block;
+  width: 3px;
+  background: rgb(203,203,203);
+  background: -moz-linear-gradient(left,  rgba(203,203,203,1) 0%, rgba(152,152,152,1) 100%);
+  background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(203,203,203,1)), color-stop(100%,rgba(152,152,152,1)));
+  background: -webkit-linear-gradient(left,  rgba(203,203,203,1) 0%,rgba(152,152,152,1) 100%);
+  background: -o-linear-gradient(left,  rgba(203,203,203,1) 0%,rgba(152,152,152,1) 100%);
+  background: -ms-linear-gradient(left,  rgba(203,203,203,1) 0%,rgba(152,152,152,1) 100%);
+  background: linear-gradient(left,  rgba(203,203,203,1) 0%,rgba(152,152,152,1) 100%);
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#cbcbcb', endColorstr='#989898',GradientType=1 );
+}
+
+.zoom .ui-slider-handle {
+  width: 38px !important;
+  height: 37px !important;
+  background: transparent url('../graphics/zoom-handle.png') top left no-repeat !important;
+  border: 0 !important;
+  left: -18px !important;
+  margin-bottom: -18px !important;
+  outline: 0 !important;
+  cursor: row-resize !important;
+}
+
+.zoom .zoom-out,
+.zoom .zoom-in {
+  position: absolute;
+  top: 0;
+  width: 38px;
+  height: 38px;
+  background: transparent url('../graphics/zoom-plus.png') top left no-repeat;
+  text-indent: -99999em;
+  left: 50%;
+  margin-left: -19px;
+}
+
+.zoom .zoom-out {
+  top: auto;
+  bottom: 0;
+  background-image: url('../graphics/zoom-minus.png');
+}
+
 .submit {
   margin: 10px 0px;
   color: #F5F5F5;
@@ -283,6 +364,10 @@ input[type="text"] {
 
 .submit:active {
   background: #BB2B00;
+}
+
+#controls label {
+  display: none;
 }
 
 

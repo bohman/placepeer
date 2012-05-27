@@ -536,7 +536,7 @@
         updateForm();
         var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
         map.setCenter(location);
-        map.setZoom(13);
+        setZoom(13);
       }
     }).keydown(function(event){
       if(event.keyCode == 13) {
@@ -546,20 +546,42 @@
     });
 
     // Custom zoom controls
-    controls.find('.zoom').prepend('<div class="mapZoomer"></div>');
-    controls.find('.zoom label, .zoom input').hide();
-    controls.find('.mapZoomer').slider({
-      orientation: 'vertical',
-      range: 'min',
-      min: 0,
-      max: 19,
-      value: map.getZoom(),
-      slide: function(event, ui) {
-        $('#controls .mapZoomLevel').val(ui.value);
-        map.setZoom(ui.value);
-      }
-    });
-    //$('#controls .mapZoomLevel').val($( "#slider-vertical" ).slider( "value" ) );
+    controls.find('.zoom')
+      .prepend('<div class="mapZoomer"></div>')
+      .prepend('<a href="#" class="zoom-in">+</a>')
+      .append('<a href="#" class="zoom-out">-</a>')
+      .find('label, input').hide()
+      .siblings('.mapZoomer').slider({
+        orientation: 'vertical',
+        min: 0,
+        max: 19,
+        value: map.getZoom(),
+        slide: function(event, ui) {
+          setZoom(ui.value);
+        }
+      })
+      .siblings('.zoom-in').click(function(e){
+        var zoomLevel = map.getZoom();
+        var maxZoom = controls.find('.mapZoomer').slider('option', 'max');
+        if(zoomLevel < maxZoom) {
+          setZoom(map.getZoom()+1)
+        }
+        e.preventDefault();
+      })
+      .siblings('.zoom-out').click(function(e){
+        var zoomLevel = map.getZoom();
+        var minZoom = controls.find('.mapZoomer').slider('option', 'min');
+        if(zoomLevel > minZoom) {
+          setZoom(map.getZoom()-1)
+        }
+        e.preventDefault();
+      });
+  }
+
+  function setZoom(integer) {
+    map.setZoom(integer);
+    $('#controls .mapZoomer').slider('option', 'value', integer)
+      .siblings('.mapZoomLevel').val(integer);
   }
 
 
