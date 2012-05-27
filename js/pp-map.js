@@ -80,7 +80,8 @@
       center: center,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       streetViewControl: false,
-      scrollwheel: false
+      scrollwheel: false,
+      disableDefaultUI: true
     }
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
 
@@ -197,6 +198,8 @@
     allYourNodes.push(node);
   }
 
+  // Unused for now. Would like to add a generic error message
+  // when we can't get an answer or such.
   function serviceTimeout() {
     return 'timeout';
   }
@@ -512,13 +515,15 @@
   //
   var geocoder = new google.maps.Geocoder();
   function initForm() {
-    $('#controls .jumpToLocation').autocomplete({
-      //This bit uses the geocoder to fetch address values
+    var controls = $('#controls');
+    // Jump to location input
+    controls.find('.jumpToLocation').autocomplete({
+      // This bit uses the geocoder to fetch address values
       source: function(request, response) {
         geocoder.geocode({ 'address': request.term }, function(results, status) {
           response($.map(results, function(item) {
             return {
-              label:  item.formatted_address,
+              label: item.formatted_address,
               value: item.formatted_address,
               latitude: item.geometry.location.lat(),
               longitude: item.geometry.location.lng()
@@ -526,7 +531,7 @@
           }));
         })
       },
-      //This bit is executed upon selection of an address
+      // This bit is executed upon selection of an address
       select: function(event, ui) {
         updateForm();
         var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
@@ -539,6 +544,22 @@
         return false;
       }
     });
+
+    // Custom zoom controls
+    controls.find('.zoom').prepend('<div class="mapZoomer"></div>');
+    controls.find('.zoom label, .zoom input').hide();
+    controls.find('.mapZoomer').slider({
+      orientation: 'vertical',
+      range: 'min',
+      min: 0,
+      max: 19,
+      value: map.getZoom(),
+      slide: function(event, ui) {
+        $('#controls .mapZoomLevel').val(ui.value);
+        map.setZoom(ui.value);
+      }
+    });
+    //$('#controls .mapZoomLevel').val($( "#slider-vertical" ).slider( "value" ) );
   }
 
 
