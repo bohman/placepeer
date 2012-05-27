@@ -48,19 +48,31 @@ body {
   #logo {
     background: transparent url('../graphics/logo-icon.png') left center no-repeat;
     display: inline-block;
-    width: 305px;
+    padding-left: 60px;
 
     b {
       background: transparent url('../graphics/logo-text.png') right center no-repeat;
-      display: block;
+      display: inline-block;
+      width: 239px;
       text-indent: -99999em;
       height: 60px;
+      vertical-align: middle;
+    }
+    p {
+      display: inline-block;
+      vertical-align: middle;
+      color: #f5f5f5;
+      line-height: 1.5;
+      font-size: 8pt;
+      font-style: italic;
     }
   }
 
   .addthis_toolbox {
-    margin-top: 5px;
-    margin-left: 100px;
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    margin-top: -16px;
   }
 }
 
