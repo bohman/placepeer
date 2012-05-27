@@ -183,7 +183,7 @@
     });
   }
 
-  function addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url) {
+  function addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar) {
     var node = {
       id: id,
       lat: lat,
@@ -193,7 +193,9 @@
       image: image,
       video: video,
       date: date,
-      url: url
+      url: url,
+      user: user,
+      avatar: avatar
     }
     allYourNodes.push(node);
   }
@@ -230,13 +232,15 @@
           var video = false;
           var date = strtotime(this.created_at);
           var url = 'https://twitter.com/' + this.from_user + '/status/' + this.id_str;
+          var user = this.from_user;
+          var avatar = this.profile_image_url;
           // Add media.
           $(this.entities.media).each(function() {
             if (this.type == 'photo' && !image) {
               image = this.media_url + ':thumb';
             }
           });
-          addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url);
+          addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
         }
       });
     }
@@ -260,7 +264,9 @@
         var video = false;
         var date = strtotime(this.datetaken);
         var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
-        addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url);
+        var user = 'DUMMYNAMN';
+        var avatar = false;
+        addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
       });
     }
 
@@ -281,11 +287,13 @@
             lon: center.lng()
           });
           var text = this.title.$t;
-          var image = false;
+          var image = this.media$group.media$thumbnail[0].url;
           var video = '<object width="280" height="210"><param name="movie" value="' + this.content.src + '"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + this.content.src + '" type="application/x-shockwave-flash" width="280" height="210" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
           var date = strtotime(this.published.$t);
           var url = this.link[0].href;
-          addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url);
+          var user = this.author[0].name.$t;
+          var avatar = false;
+          addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
         }
       });
     }
@@ -367,44 +375,50 @@
       });
       infoWindow.open(map, marker);
       
+      var user = '<h3 class="user">' + object.user + '</h3>';
+      var avatar = '';
       var text = object.text;
-      var images = [];
-      var videos = [];
-      var links = [];
+      var media = '';
       
-      if (object.image) {
-        images.push('<img src="' + object.image + '" width="100" />');
+      if (object.avatar) {
+        avatar = '<img class="avatar" src="' + object.avatar + '" />';
       }
       if (object.video) {
-        videos.push(object.video);
+        media = object.video;
       }
-      if (object.url) {
-        links.push('<a href="' + object.url + '" target="_blank">Visa orginal</a>');
+      else if (object.image) {
+        media = '<img src="' + object.image + '" width="100" />';
       }
       
       // Find urls in the text, and move them to a separate array.
-      var urls = object.text.match(/((http|https):\/\/|www\.)\S+/gi);
-      for (var index in urls) {
-        links.push('<a href="' + urls[index] + '" target="_blank">' + urls[index] + '</a>');
-        text = text.replace(urls[index], '');
-        $.ajax({
-          url: 'get.php?url=' + urls[index],
-          dataType: 'json',
-          async: false,
-          complete: function(response, status) {
-            result = $.parseJSON(response.responseText);
-            if (result.image) {
-              images.push('<img src="' + result.image + '" width="100" />');
+      if (!media.length) {
+        var urls = object.text.match(/((http|https):\/\/|www\.)\S+/gi);
+        for (var index in urls) {
+          $.ajax({
+            url: 'get.php?url=' + urls[index],
+            dataType: 'json',
+            async: false,
+            complete: function(response, status) {
+              result = $.parseJSON(response.responseText);
+              if (result.image) {
+                media = '<img src="' + result.image + '" width="100" />';
+              }
             }
+          });
+          if (media.length) {
+            break;
           }
-        });
+        }
       }
       
-      text = '<p>' + text + '</p>';
-      images = '<ul class="images"><li>' + images.join('</li><li>') + '</li></ul>';
-      videos = '<ul class="videos"><li>' + videos.join('</li><li>') + '</li></ul>';
-      links = '<ul class="links"><li>' + links.join('</li><li>') + '</li></ul>';
-      infoWindow.setContent(text + images + videos + links);
+      text = text.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '<a href="$1" target="_blank">$1</a>'); 
+      
+      sender = '<a href="' + object.url + '" class="sender" target="_blank">' + avatar + user + '</a>';
+      text = '<p class="text">' + text + '</p>';
+      if (media.length) {
+        media = '<div class="media">' + media + '</div>';
+      }
+      infoWindow.setContent(sender + text + media);
     });
 
     object.marker = marker;
@@ -412,24 +426,17 @@
   }
   
   function addListItem(object) {
-    var text = object.text;
-    var images = [];
-    var videos = [];
-    var links = [];
-    
     if (object.image) {
-      images.push('<img src="' + object.image + '" width="100" />');
+      content = '<img src="' + object.image + '" width="100" />';
     }
-    if (object.video) {
-      videos.push(object.video);
+    else {
+      content = '<p>' + object.text + '</p>';
     }
+  
+    content = '<div class="content">' + content + '</p>';
+    user = '<h3 class="user">' + object.user + '</h3>';
     
-    sender = '<h3 class="sender">' + text + '</h3>';
-    text = '<p class="text">' + text + '</p>';
-    images = '<ul class="images"><li>' + images.join('</li><li>') + '</li></ul>';
-    videos = '<ul class="videos"><li>' + videos.join('</li><li>') + '</li></ul>';
-    
-    $listItem = $('<div id="' + object.id + '" class="item-wrapper">' + sender + text + images + videos + '</div>').appendTo('#list');
+    $listItem = $('<div id="' + object.id + '" class="item-wrapper">' + content + user + '</div>').appendTo('#list');
     
     object.$listItem = $listItem;
     return $listItem;
