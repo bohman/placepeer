@@ -426,18 +426,19 @@
   }
   
   function addListItem(object) {
+    var content, user;
     if (object.image) {
-      content = '<img src="' + object.image + '" width="100" />';
+      content = '<img src="' + object.image + '" />';
     }
     else {
-      content = '<p>' + object.text + '</p>';
+      content = '<p class="pseudo-image">' + object.text + '</p>';
     }
-  
-    content = '<div class="content">' + content + '</p>';
+
+    content = '<div class="content">' + content + '</div>';
     user = '<h3 class="user">' + object.user + '</h3>';
-    
-    $listItem = $('<div id="' + object.id + '" class="item-wrapper">' + content + user + '</div>').appendTo('#list');
-    
+
+    $listItem = $('<div id="' + object.id + '" class="item">' + content + user + '</div>').appendTo('#list');
+
     object.$listItem = $listItem;
     return $listItem;
   }
