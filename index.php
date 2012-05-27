@@ -54,7 +54,7 @@
         <div id="list"></div>
       </div>
       <div class="always-show">
-        <a href="#" id="toggle-sidebar">Toggle</a>
+        <a href="#" id="toggle-sidebar"><b>Toggle</b></a>
         <div class="zoom">
           <label for="zoom">Zoom:</label>
           <input type="text" name="mapZoomLevel" class="mapZoomLevel" value="" />
