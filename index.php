@@ -4,6 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Placepeer</title>
   <link rel="stylesheet" id="placepeer-css"  href="css/style.css" type="text/css" media="all" />
+  <link rel="stylesheet" id="jquery-ui-css"  href="css/zoomer-base/jquery-ui-1.8.20.custom.css" type="text/css" media="all" />
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
   <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCBZ5stPtmfRqLgbtjwd-SCGApkG_OlnDU&sensor=false"></script>
   <script type="text/javascript" src="js/jqueryuicustom.js"></script>
@@ -39,7 +40,6 @@
             <input type="hidden" name="searchLat" class="searchLat" value="" />
             <input type="hidden" name="searchLon" class="searchLon" value="" />
             <input type="hidden" name="searchRadius" class="searchRadius" value="" />
-            <input type="hidden" name="mapZoomLevel" class="mapZoomLevel" value="" />
           </div>
           <div class="form-item keyword">
             <label for="searchQuery">Keyword:</label>
@@ -57,7 +57,10 @@
       </div>
       <div class="always-show">
         <a href="#" id="toggle-sidebar">Toggle</a>
-        zoom
+        <div class="zoom">
+          <label for="zoom">Zoom:</label>
+          <input type="text" name="mapZoomLevel" class="mapZoomLevel" value="" />
+        </div>
         <input class="submit" type="submit" value="Refresh" />
       </div>
     </form>
