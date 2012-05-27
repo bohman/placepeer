@@ -320,19 +320,12 @@
     allYourMarkers.push(marker);
 
     // Add an info window.
-    var content = '<strong>' + object.text + '</strong>';
-    if (object.image) {
-      content += '<p><img src="' + object.image + '" /></p>';
-    }
-    if (object.video) {
-      content += '<p>' + object.video + '</p>';
-    }
-    content += '<p><a href="' + object.url + '" target="_blank">Visa</a></p>';
     var infoWindow = new google.maps.InfoWindow({
       position: location,
-      content: content
+      content: 'Laddar...'
     });
     allYourInfoWindows.push(infoWindow);
+    
 
     // Open the info window on click.
     google.maps.event.addListener(marker, 'click', function() {
@@ -340,7 +333,47 @@
         this.close();
       });
       infoWindow.open(map, marker);
+      
+      var text = object.text;
+      var images = [];
+      var videos = [];
+      var links = [];
+      
+      if (object.image) {
+        images.push('<img src="' + object.image + '" width="100" />');
+      }
+      if (object.video) {
+        videos.push(object.video);
+      }
+      if (object.url) {
+        links.push('<a href="' + object.url + '" target="_blank">Visa orginal</a>');
+      }
+      
+      // Find urls in the text, and move them to a separate array.
+      var urls = object.text.match(/((http|https):\/\/|www\.)\S+/gi);
+      for (var index in urls) {
+        links.push('<a href="' + urls[index] + '" target="_blank">' + urls[index] + '</a>');
+        text = text.replace(urls[index], '');
+        $.ajax({
+          url: 'get.php?url=' + urls[index],
+          dataType: 'json',
+          async: false,
+          complete: function(response, status) {
+            result = $.parseJSON(response.responseText);
+            if (result.image) {
+              images.push('<img src="' + result.image + '" width="100" />');
+            }
+          }
+        });
+      }
+      
+      text = '<p>' + text + '</p>';
+      images = '<ul class="images"><li>' + images.join('</li><li>') + '</li></ul>';
+      videos = '<ul class="videos"><li>' + videos.join('</li><li>') + '</li></ul>';
+      links = '<ul class="links"><li>' + links.join('</li><li>') + '</li></ul>';
+      infoWindow.setContent(text + images + videos + links);
     });
+
   }
 
 
@@ -486,6 +519,5 @@
   jQuery(document).ready(function() {
     mapInit();
   });
-
 
 }());
