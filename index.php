@@ -51,9 +51,7 @@
             <input type="text" name="searchDate" class="searchDate" value="<?php echo $_GET['searchDate']; ?>" />
           </div>
         </div>
-        <div id="list">
-          List goes here
-        </div>
+        <div id="list"></div>
       </div>
       <div class="always-show">
         <a href="#" id="toggle-sidebar">Toggle</a>

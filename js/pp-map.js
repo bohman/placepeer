@@ -44,9 +44,10 @@
   // Set up global variables and run map_init() as a callback.
   //
   var sitepath = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
+  var center;
   var map;
   var initiated = false;
-  var allYourNodes = {};
+  var allYourNodes = [];
   var allYourMarkers = [];
   var allYourInfoWindows = [];
 
@@ -73,10 +74,10 @@
     }
 
     // Initial map load: build map
-    var latlng = new google.maps.LatLng(searchLat, searchLon);
+    center = new google.maps.LatLng(searchLat, searchLon);
     var mapOptions = {
       zoom: mapZoomLevel,
-      center: latlng,
+      center: center,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       streetViewControl: false,
       scrollwheel: false
@@ -181,16 +182,19 @@
     });
   }
 
-  function addToAllYourNodes(id, lat, lon, text, image, video, date, url) {
-    allYourNodes[id] = {
+  function addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url) {
+    var node = {
+      id: id,
       lat: lat,
       lon: lon,
+      distance: distance,
       text: text,
       image: image,
       video: video,
       date: date,
       url: url
     }
+    allYourNodes.push(node);
   }
 
   function serviceTimeout() {
@@ -211,6 +215,13 @@
           var id = 'twitter-' + index;
           var lat = this.geo.coordinates[0];
           var lon = this.geo.coordinates[1];
+          var distance = distHaversine({
+            lat: lat,
+            lon: lon
+          },{
+            lat: center.lat(),
+            lon: center.lng()
+          });
           var text = this.text;
           var image = false;
           var video = false;
@@ -222,7 +233,7 @@
               image = this.media_url + ':thumb';
             }
           });
-          addToAllYourNodes(id, lat, lon, text, image, video, date, url);
+          addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url);
         }
       });
     }
@@ -234,12 +245,19 @@
         var id = 'flickr-' + index;
         var lat = this.latitude;
         var lon = this.longitude;
+        var distance = distHaversine({
+            lat: lat,
+            lon: lon
+          },{
+            lat: center.lat(),
+            lon: center.lng()
+          });
         var text = this.description._content;
         var image = this.url_m;
         var video = false;
         var date = strtotime(this.datetaken);
         var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
-        addToAllYourNodes(id, lat, lon, text, image, video, date, url);
+        addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url);
       });
     }
 
@@ -252,20 +270,32 @@
           var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
           var lat = coordinates[0];
           var lon = coordinates[1];
+          var distance = distHaversine({
+            lat: lat,
+            lon: lon
+          },{
+            lat: center.lat(),
+            lon: center.lng()
+          });
           var text = this.title.$t;
           var image = false;
           var video = '<object width="280" height="210"><param name="movie" value="' + this.content.src + '"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + this.content.src + '" type="application/x-shockwave-flash" width="280" height="210" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
           var date = strtotime(this.published.$t);
           var url = this.link[0].href;
-          addToAllYourNodes(id, lat, lon, text, image, video, date, url);
+          addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url);
         }
       });
     }
 
+    // Sort the nodes depending on the distance from the center of the map.
+    allYourNodes.sort(function(a, b) {
+      return a.distance <= b.distance ? -1 : 1;
+    });
+
     // Use allYourNodes to add markers to map and build list
     jQuery.each(allYourNodes, function(index) {
       addMarker(this);
-      // Skapa lista.
+      addListItem(this);
     });
 
     // Update form and set map events
@@ -371,6 +401,26 @@
       infoWindow.setContent(text + images + videos + links);
     });
 
+  }
+  
+  function addListItem(object) {
+    var text = object.text;
+    var images = [];
+    var videos = [];
+    var links = [];
+    
+    if (object.image) {
+      images.push('<img src="' + object.image + '" width="100" />');
+    }
+    if (object.video) {
+      videos.push(object.video);
+    }
+    
+    sender = '<h3 class="sender">' + text + '</div>';
+    text = '<p class="text">' + text + '</p>';
+    images = '<ul class="images"><li>' + images.join('</li><li>') + '</li></ul>';
+    videos = '<ul class="videos"><li>' + videos.join('</li><li>') + '</li></ul>';
+    $('#list').append('<div class="item-wrapper">' + sender + text + images + videos + '</div>');
   }
 
 
