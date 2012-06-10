@@ -10,6 +10,7 @@
   <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js"></script>
   <script type="text/javascript" src="js/jqueryuicustom.js"></script>
   <?php /* <script type="text/javascript" src="js/jquery.noisy.min.js"></script> */ ?>
+  <script type="text/javascript" src="js/jquery.scrollTo-1.4.2-min.js"></script>
   <script type="text/javascript" src="js/pp-utils.js"></script>
   <script type="text/javascript" src="js/pp-map.js"></script>
   <script type="text/javascript" src="js/pp-interface.js"></script>

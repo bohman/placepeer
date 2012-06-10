@@ -416,14 +416,28 @@
           renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
         }
       }
+      
+      var $activeListItem = $('#list .item#' + object.id).addClass('active');
+      $('#list .item').not($activeListItem).removeClass('active');
+    });
+
+    google.maps.event.addListener(infoBubble, 'closeclick', function() {
+      $('#list .item').removeClass('active');
     });
 
     // Open the info window on click.
-    google.maps.event.addListener(marker, 'click', function() {
+    google.maps.event.addListener(marker, 'click', function(event) {
       $(allYourInfoWindows).each(function() {
         this.close();
       });
       infoBubble.open(map, marker);
+      
+      // If we have an event argument, it means that this event was triggered
+      // from the marker. Scroll to the list item.
+      if (typeof event != 'undefined') {
+        $('#list-wrapper .tabs a[data-tab=list]').click();
+        $('#tab-content').scrollTo('#' + object.id, 250, {});
+      }
     });
 
     object.marker = marker;
