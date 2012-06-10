@@ -37,6 +37,11 @@ function initListToggle() {
     $sidebarWrappers.not('#' + $(this).data('tab')).hide();
   });
 
+  // Activate the list tab if the user has performed a search.
+  if (window.location.search.length) {
+    $sidebarTabs.filter('[data-tab=list]').click();
+  }
+
   // Toggle the sidebar.
   $('#toggle-sidebar').click(function(event) {
     $('#list-wrapper').toggleClass('hidden');

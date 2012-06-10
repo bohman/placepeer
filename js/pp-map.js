@@ -361,68 +361,101 @@
     allYourMarkers.push(marker);
 
     // Add an info window.
-    var infoWindow = new google.maps.InfoWindow({
+
+    var infoBubble = new InfoBubble({
       position: location,
       content: 'Laddar...'
     });
-    allYourInfoWindows.push(infoWindow);
     
+    allYourInfoWindows.push(infoBubble);
 
-    // Open the info window on click.
-    google.maps.event.addListener(marker, 'click', function() {
-      $(allYourInfoWindows).each(function() {
-        this.close();
-      });
-      infoWindow.open(map, marker);
-      
-      var user = '<h3 class="user">' + object.user + '</h3>';
-      var avatar = '';
-      var text = object.text;
-      var media = '';
-      
-      if (object.avatar) {
-        avatar = '<img class="avatar" src="' + object.avatar + '" />';
-      }
-      if (object.video) {
-        media = object.video;
-      }
-      else if (object.image) {
-        media = '<img src="' + object.image + '" width="100" />';
-      }
-      
-      // Find urls in the text, and move them to a separate array.
-      if (!media.length) {
-        var urls = object.text.match(/((http|https):\/\/|www\.)\S+/gi);
-        for (var index in urls) {
-          $.ajax({
-            url: 'get.php?url=' + urls[index],
-            dataType: 'json',
-            async: false,
-            complete: function(response, status) {
-              result = $.parseJSON(response.responseText);
-              if (result.image) {
-                media = '<img src="' + result.image + '" width="100" />';
+    google.maps.event.addListener(infoBubble, 'domready', function() {
+      if (!object.rendered) {        
+        var user = '<h3 class="user">' + object.user + '</h3>';
+        var avatar = '';
+        var text = object.text;
+        var media = '';
+        
+        if (object.avatar) {
+          avatar = '<img class="avatar" src="' + object.avatar + '" />';
+        }
+        if (object.video) {
+          media = object.video;
+        }
+        else if (object.image) {
+          media = '<img src="' + object.image + '" width="100" />';
+        }
+        
+        // Find urls in the text, and move them to a separate array.
+        if (!media.length) {
+          var urls = object.text.match(/((http|https):\/\/|www\.)\S+/gi);
+          if (urls) {
+            for (var index in urls) {
+              $.ajax({
+                url: 'get.php?url=' + urls[index],
+                dataType: 'json',
+                async: true,
+                complete: function(response, status) {
+                  result = $.parseJSON(response.responseText);
+                  if (result.image && !object.rendered) {
+                    media = '<img src="' + result.image + '" width="100" />';
+                    renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
+                  }
+                }
+              });
+              if (media.length) {
+                break;
               }
             }
-          });
-          if (media.length) {
-            break;
           }
+          else {
+            renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
+          }
+        }
+        else {
+          renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
         }
       }
       
-      text = text.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '<a href="$1" target="_blank">$1</a>'); 
+      var $activeListItem = $('#list .item#' + object.id).addClass('active');
+      $('#list .item').not($activeListItem).removeClass('active');
+    });
+
+    google.maps.event.addListener(infoBubble, 'closeclick', function() {
+      $('#list .item').removeClass('active');
+    });
+
+    // Open the info window on click.
+    google.maps.event.addListener(marker, 'click', function(event) {
+      $(allYourInfoWindows).each(function() {
+        this.close();
+      });
+      infoBubble.open(map, marker);
       
-      sender = '<a href="' + object.url + '" class="sender" target="_blank">' + avatar + user + '</a>';
-      text = '<p class="text">' + text + '</p>';
-      if (media.length) {
-        media = '<div class="media">' + media + '</div>';
+      // If we have an event argument, it means that this event was triggered
+      // from the marker. Scroll to the list item.
+      if (typeof event != 'undefined') {
+        $('#list-wrapper .tabs a[data-tab=list]').click();
+        $('#tab-content').scrollTo('#' + object.id, 250, {});
       }
-      infoWindow.setContent(sender + text + media);
     });
 
     object.marker = marker;
     return marker;
+  }
+  
+  function renderInfoBubbleContent(infoBubble, object, avatar, user, text, media) {
+    text = text.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '<a href="$1" target="_blank">$1</a>'); 
+        
+    sender = '<a href="' + object.url + '" class="sender" target="_blank">' + avatar + user + '</a>';
+    text = '<p class="text">' + text + '</p>';
+    if (media.length) {
+      media = '<div class="media">' + media + '</div>';
+    }
+    
+    object.rendered = true;
+    infoBubble.setContent(sender + text + media);
+    infoBubble.updateContent_();
   }
   
   function addListItem(object) {
