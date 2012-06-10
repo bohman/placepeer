@@ -459,8 +459,16 @@ input[type="text"] {
 #list {
 
   .item {
+    background: #ffffff; /* Old browsers */
+    background: -moz-linear-gradient(-45deg,  #ffffff 0%, #cdd4e4 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right bottom, color-stop(0%,#ffffff), color-stop(100%,#cdd4e4)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(-45deg,  #ffffff 0%,#cdd4e4 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(-45deg,  #ffffff 0%,#cdd4e4 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(-45deg,  #ffffff 0%,#cdd4e4 100%); /* IE10+ */
+    background: linear-gradient(-45deg,  #ffffff 0%,#cdd4e4 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#cdd4e4',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
     float: left;
-    width: 50%;
+    width: 33%;
     overflow: hidden;
     height: 90px;
     outline: 1px solid #bec2cd;
@@ -468,7 +476,7 @@ input[type="text"] {
 
     .content {
       overflow: hidden;
-      background: #d1d8e7;
+      padding: 0 5px;
     }
 
     img {
@@ -479,31 +487,24 @@ input[type="text"] {
     .pseudo-image {
       font-family: Georgia, serif;
       font-weight: normal;
-      font-size: 15px;
-      padding: 5px;
+      font-size: 11px;
       height: 69px;
       color: #9397A8;
       text-shadow: 0 1px 1px #fff;
     }
 
     .user {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 5px;
       font-weight: bold;
-      background: #ffffa3;
-      font-size: 12px;
+      font-size: 11px;
+      padding: 5px 5px 3px 5px;
     }
   }
 
-  .item:nth-child(2n+2) {
+  .item:nth-child(3n+3) {
     border-left: 0
   }
 
-  .item:hover .content {
-    background: #BBC2D1;
+  .item:hover {
     cursor: pointer;
   }
 
@@ -525,4 +526,13 @@ input[type="text"] {
 
 #map #map-canvas {
   height: 100%;
+
+  p.text {
+    font-family: serif;
+  }
+
 }
+
+
+
+

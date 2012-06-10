@@ -437,7 +437,7 @@
     content = '<div class="content">' + content + '</div>';
     user = '<h3 class="user">' + object.user + '</h3>';
 
-    $listItem = $('<div id="' + object.id + '" class="item">' + content + user + '</div>').appendTo('#list');
+    $listItem = $('<div id="' + object.id + '" class="item">' + user + content + '</div>').appendTo('#list');
 
     object.$listItem = $listItem;
     return $listItem;
