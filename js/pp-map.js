@@ -30,9 +30,14 @@
   // Settings
   //
 
-  // Default values  
-  var searchLat = google.loader.ClientLocation.latitude;
-  var searchLon = google.loader.ClientLocation.longitude;
+  // Default values
+  if(google.loader.ClientLocation != null) {
+    var searchLat = google.loader.ClientLocation.latitude;
+    var searchLon = google.loader.ClientLocation.longitude;
+  } else {
+    var searchLat = 55.596911;
+    var searchLon = 12.998478;
+  }
   var searchRadius = 4;
   var searchQuery = '';
   var searchDate = date('Y-m-d');
