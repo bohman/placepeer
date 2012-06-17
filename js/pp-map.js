@@ -152,7 +152,7 @@
       data: {
         method: 'flickr.photos.search',
         format: 'json',
-        extras: 'geo,url_m,date_taken,description',
+        extras: 'geo,url_m,date_taken,description,owner_name',
         has_geo: 1,
         api_key: apiKey,
         text: searchQuery,
@@ -277,12 +277,12 @@
             lat: center.lat(),
             lon: center.lng()
           });
-        var text = this.description._content;
+        var text = this.title;
         var image = this.url_m;
         var video = false;
         var date = strtotime(this.datetaken);
         var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
-        var user = 'DUMMYNAMN';
+        var user = this.ownername;
         var avatar = false;
         addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
       });
