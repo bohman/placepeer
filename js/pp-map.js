@@ -30,9 +30,9 @@
   // Settings
   //
 
-  // Default values
-  var searchLat = 55.596911;
-  var searchLon = 12.998478;
+  // Default values  
+  var searchLat = google.loader.ClientLocation.latitude;
+  var searchLon = google.loader.ClientLocation.longitude;
   var searchRadius = 4;
   var searchQuery = '';
   var searchDate = date('Y-m-d');
