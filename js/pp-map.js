@@ -69,7 +69,7 @@
       searchLon = params['searchLon'] ? params['searchLon'] : searchLon;
       searchRadius = params['searchRadius'] ? params['searchRadius'] : searchRadius;
       searchQuery = params['searchQuery'] ? params['searchQuery'] : searchQuery;
-      searchDate = strtotime(params['searchDate'] ? params['searchDate'] : searchDate);
+      searchDate = strtotime(params['searchDate'] ? params['searchDate'] + ' 00:00' : searchDate + ' 00:00');
       mapZoomLevel = parseInt(params['mapZoomLevel'] ? params['mapZoomLevel'] : mapZoomLevel);
     }
 
