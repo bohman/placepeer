@@ -16,7 +16,6 @@
     Linus Bohman - @linusbohman
     Lars Berggren - @punktlars
     Jens Grip - @jensgrip
-    Daniel Friis - @danielfriis
     Olof Johansson - @ojohansson
 
     Companies involved:
@@ -368,7 +367,7 @@
     // Add an info window.
     var infoBubble = new InfoBubble({
       position: location,
-      content: 'Laddar...'
+      content: 'Loading...'
     });
 
     allYourInfoWindows.push(infoBubble);
