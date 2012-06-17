@@ -354,6 +354,11 @@
       });
     }
 
+    // In case we didn't find anything.
+    if (allYourNodes.length == 0) {
+      $('#list').html("<div class=\"empty-text\"><p>We're terribly sorry. but we couldn't find anything that met your search criteria.</p><p>Please alter your search, and try again.</p></div>");
+    }
+
     // Sort the nodes depending on the distance from the center of the map.
     allYourNodes.sort(function(a, b) {
       return a.distance <= b.distance ? -1 : 1;
