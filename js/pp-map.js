@@ -234,12 +234,17 @@
           var url = 'https://twitter.com/' + this.from_user + '/status/' + this.id_str;
           var user = this.from_user;
           var avatar = this.profile_image_url;
-          // Add media.
-          $(this.entities.media).each(function() {
-            if (this.type == 'photo' && !image) {
-              image = this.media_url + ':thumb';
-            }
-          });
+
+          // Add media
+          // This one time, at band camp, we actually got a result where an object didn't have
+          // 'entities', even though documentation said we should. So let's do an extra check. -LB
+          if(this.hasOwnProperty('entities')) {
+            $(this.entities.media).each(function() {
+              if (this.type == 'photo' && !image) {
+                image = this.media_url + ':thumb';
+              }
+            });
+          }
           addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
         }
       });
