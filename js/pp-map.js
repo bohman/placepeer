@@ -103,7 +103,8 @@
     jQuery.when(
       getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate),
       getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate),
-      getYouTube(searchLat, searchLon, searchRadius, searchQuery)
+      getYouTube(searchLat, searchLon, searchRadius, searchQuery),
+      getInstagram(searchLat, searchLon, searchRadius, searchQuery, searchDate)
     ).then(buildShit);
 
     initiated = true;
@@ -150,7 +151,7 @@
       data: {
         method: 'flickr.photos.search',
         format: 'json',
-        extras: 'geo,url_m,date_taken,description',
+        extras: 'geo,url_m,date_taken,description,owner_name',
         has_geo: 1,
         api_key: apiKey,
         text: searchQuery,
@@ -177,6 +178,23 @@
         'location': searchLat + ',' + searchLon,
         'location-radius': searchRadius + 'km',
         'q': searchQuery,
+      },
+      dataType: 'jsonp'
+    });
+  }
+  
+  function getInstagram(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
+    var endpoint = 'https://api.instagram.com/v1/media/search';
+
+    return jQuery.ajax({
+      url: endpoint,
+      data: {
+        'client_id': 'd340e84f802940fc8309539b6dc5d4fa',
+        'lat': searchLat,
+        'lng': searchLon,
+        'min_timestamp': searchDate,
+        'max_timestamp': searchDate + 60*60*24,
+        'distance': searchRadius * 1000
       },
       dataType: 'jsonp'
     });
@@ -209,7 +227,7 @@
   //
   // Add the results to the map, and create the initial list.
   //
-  function buildShit(twitterResult, flickrResult, youTubeResult) {
+  function buildShit(twitterResult, flickrResult, youTubeResult, instagramResult) {
 
     // Add twitter result to allYourNodes
     if (typeof twitterResult[0]['results'] == 'object') {
@@ -263,12 +281,12 @@
             lat: center.lat(),
             lon: center.lng()
           });
-        var text = this.description._content;
+        var text = this.title;
         var image = this.url_m;
         var video = false;
         var date = strtotime(this.datetaken);
         var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
-        var user = 'DUMMYNAMN';
+        var user = this.ownername;
         var avatar = false;
         addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
       });
@@ -299,6 +317,29 @@
           var avatar = false;
           addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
         }
+      });
+    }
+    
+    if (instagramResult[0].meta.code == 200 && typeof instagramResult[0].data == 'object') {
+      $(instagramResult[0].data).each(function(index) {
+        var id = 'instagram-' + index;
+        var lat = this.location.latitude;
+        var lon = this.location.longitude;
+        var distance = distHaversine({
+          lat: lat,
+          lon: lon
+        },{
+          lat: center.lat(),
+          lon: center.lng()
+        });
+        var text = this.caption ? this.caption.text : '';
+        var image = this.images.thumbnail.url;
+        var video = false;
+        var date = strtotime(this.created_time);
+        var url = this.link;
+        var user = this.user.username;
+        var avatar = this.profile_picture;
+        addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
       });
     }
 
@@ -400,10 +441,10 @@
                 async: true,
                 complete: function(response, status) {
                   result = $.parseJSON(response.responseText);
-                  if (result.image && !object.rendered) {
+                  if (result.image) {
                     media = '<img src="' + result.image + '" width="100" />';
-                    renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
                   }
+                  renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
                 }
               });
               if (media.length) {
