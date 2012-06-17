@@ -323,6 +323,16 @@
     
     if (instagramResult[0].meta.code == 200 && typeof instagramResult[0].data == 'object') {
       $(instagramResult[0].data).each(function(index) {
+        if (searchQuery) {
+          // Perform a manual search within the caption.
+          if (!this.caption) {
+            return;
+          }
+          if (this.caption.text.toLowerCase().search(searchQuery.toLowerCase()) == -1) {
+            return;
+          }
+        }
+      
         var id = 'instagram-' + index;
         var lat = this.location.latitude;
         var lon = this.location.longitude;
