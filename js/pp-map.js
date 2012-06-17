@@ -295,7 +295,8 @@
     // Add YouTube results to allYourNodes.
     if (typeof youTubeResult[0]['feed']['entry'] == 'object') {
       $(youTubeResult[0]['feed']['entry']).each(function(index) {
-        if (this.georss$where && window.date('Y-m-d', strtotime(this.published.$t)) == window.date('Y-m-d', searchDate)) {
+        var date = this.yt$recorded ? this.yt$recorded.$t : window.date('Y-m-d', strtotime(this.published.$t));
+        if (this.georss$where && date == window.date('Y-m-d', searchDate)) {
           // Set the arguments.
           var id = 'youtube-' + index;
           var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
