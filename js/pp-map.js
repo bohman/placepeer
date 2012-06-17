@@ -30,9 +30,9 @@
   // Settings
   //
 
-  // Default values
-  var searchLat = 55.596911;
-  var searchLon = 12.998478;
+  // Default values  
+  var searchLat = google.loader.ClientLocation.latitude;
+  var searchLon = google.loader.ClientLocation.longitude;
   var searchRadius = 4;
   var searchQuery = '';
   var searchDate = date('Y-m-d');
@@ -68,7 +68,7 @@
       searchLon = params['searchLon'] ? params['searchLon'] : searchLon;
       searchRadius = params['searchRadius'] ? params['searchRadius'] : searchRadius;
       searchQuery = params['searchQuery'] ? params['searchQuery'] : searchQuery;
-      searchDate = strtotime(params['searchDate'] ? params['searchDate'] : searchDate);
+      searchDate = strtotime(params['searchDate'] ? params['searchDate'] + ' 00:00' : searchDate + ' 00:00');
       mapZoomLevel = parseInt(params['mapZoomLevel'] ? params['mapZoomLevel'] : mapZoomLevel);
     }
 
@@ -295,7 +295,8 @@
     // Add YouTube results to allYourNodes.
     if (typeof youTubeResult[0]['feed']['entry'] == 'object') {
       $(youTubeResult[0]['feed']['entry']).each(function(index) {
-        if (this.georss$where && window.date('Y-m-d', strtotime(this.published.$t)) == window.date('Y-m-d', searchDate)) {
+        var date = this.yt$recorded ? this.yt$recorded.$t : window.date('Y-m-d', strtotime(this.published.$t));
+        if (this.georss$where && date == window.date('Y-m-d', searchDate)) {
           // Set the arguments.
           var id = 'youtube-' + index;
           var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
@@ -322,6 +323,16 @@
     
     if (instagramResult[0].meta.code == 200 && typeof instagramResult[0].data == 'object') {
       $(instagramResult[0].data).each(function(index) {
+        if (searchQuery) {
+          // Perform a manual search within the caption.
+          if (!this.caption) {
+            return;
+          }
+          if (this.caption.text.toLowerCase().search(searchQuery.toLowerCase()) == -1) {
+            return;
+          }
+        }
+      
         var id = 'instagram-' + index;
         var lat = this.location.latitude;
         var lon = this.location.longitude;
@@ -338,9 +349,14 @@
         var date = strtotime(this.created_time);
         var url = this.link;
         var user = this.user.username;
-        var avatar = this.profile_picture;
+        var avatar = this.user.profile_picture;
         addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
       });
+    }
+
+    // In case we didn't find anything.
+    if (allYourNodes.length == 0) {
+      $('#list').html("<div class=\"empty-text\"><p>We're terribly sorry. but we couldn't find anything that met your search criteria.</p><p>Please alter your search, and try again.</p></div>");
     }
 
     // Sort the nodes depending on the distance from the center of the map.
@@ -543,23 +559,7 @@
 
     // Kill list.
   }
-
-
-  //
-  // getUrlParams()
-  // Returns URL parameters in a nifty array. Duh.
-  //
-  function getUrlParams() {
-    var vars = [], hash;
-    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
-    for(var i = 0; i < hashes.length; i++) {
-      hash = hashes[i].split('=');
-      vars.push(hash[0]);
-      vars[hash[0]] = hash[1];
-    }
-    return vars;
-  }
-
+  
 
   //
   // getCurrentRadius()
@@ -629,10 +629,10 @@
       },
       // This bit is executed upon selection of an address
       select: function(event, ui) {
-        updateForm();
-        var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-        map.setCenter(location);
-        setZoom(13);
+        jQuery('#controls .searchLat').val(ui.item.latitude);
+        jQuery('#controls .searchLon').val(ui.item.longitude);
+        jQuery('#controls .mapZoomLevel').val(13);
+        jQuery('#controls .searchRadius').val(4);
       }
     }).keydown(function(event){
       if(event.keyCode == 13) {
