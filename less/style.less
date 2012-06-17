@@ -32,6 +32,22 @@ body {
   position: fixed;
   width: 100%;
   z-index: 100;
+
+  .boxShadow(0, 1px, 3px, rgba(0, 0, 0, 0.4));
+  height: 60px;
+  top: 0;
+  z-index: 999;
+
+  .addthis_toolbox {
+    position: absolute;
+    right: 25px;
+    top: 50%;
+    margin-top: -16px;
+  }
+}
+
+#header,
+.overlay-header {
   background: #48b9fe;
   background: -moz-linear-gradient(top,  #48b9fe 0%, #303ebf 100%);
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#48b9fe), color-stop(100%,#303ebf));
@@ -40,39 +56,29 @@ body {
   background: -ms-linear-gradient(top,  #48b9fe 0%,#303ebf 100%);
   background: linear-gradient(top,  #48b9fe 0%,#303ebf 100%);
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#48b9fe', endColorstr='#303ebf',GradientType=0 );
-  .boxShadow(0, 1px, 3px, rgba(0, 0, 0, 0.4));
-  height: 60px;
-  top: 0;
-  z-index: 9999;
+}
 
-  #logo {
-    background: transparent url('../graphics/logo-icon.png') left center no-repeat;
+.pp-logo,
+#logo {
+  background: transparent url('../graphics/logo-icon.png') left center no-repeat;
+  display: inline-block;
+  padding-left: 60px;
+
+  b {
+    background: transparent url('../graphics/logo-text.png') right center no-repeat;
     display: inline-block;
-    padding-left: 60px;
-
-    b {
-      background: transparent url('../graphics/logo-text.png') right center no-repeat;
-      display: inline-block;
-      width: 239px;
-      text-indent: -99999em;
-      height: 60px;
-      vertical-align: middle;
-    }
-    p {
-      display: inline-block;
-      vertical-align: middle;
-      color: #f5f5f5;
-      line-height: 1.5;
-      font-size: 8pt;
-      font-style: italic;
-    }
+    width: 239px;
+    text-indent: -99999em;
+    height: 60px;
+    vertical-align: middle;
   }
-
-  .addthis_toolbox {
-    position: absolute;
-    right: 25px;
-    top: 50%;
-    margin-top: -16px;
+  p {
+    display: inline-block;
+    vertical-align: middle;
+    color: #f5f5f5;
+    line-height: 1.5;
+    font-size: 8pt;
+    font-style: italic;
   }
 }
 
@@ -432,6 +438,7 @@ input[type="text"] {
 
 /* Submit */
 .submit {
+  cursor: pointer;
   margin: 10px 0px;
   color: #F5F5F5;
   background: #EE5B00;
@@ -602,14 +609,6 @@ img[src="http://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"] {
 
   .text {
     line-height: 1.3em;
-
-    a {
-      text-decoration: none;
-      color: #b1b0af;
-    }
-    a:hover {
-      color: #838383;
-    }
   }
 
   .media {
@@ -620,5 +619,107 @@ img[src="http://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"] {
       height: auto;
       max-width: 100%;
     }
+  }
+}
+
+.overlay-content a,
+.bubble-content a {
+  text-decoration: none;
+  color: #9C9C9C;
+}
+.overlay-content a:focus,
+.bubble-content a:focus,
+.overlay-content a:hover,
+.bubble-content a:hover {
+  color: #696969;
+}
+
+
+/* Overlay ----------------------- */
+#about-placeper.overlay {
+  z-index: 9999;
+}
+
+.overlay.hidden {
+  display: none;
+}
+
+.overlay-back {
+  z-index: 9999;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(00, 00, 00, 0.6);
+}
+
+.overlay-header {
+  margin: -20px -20px 0 -20px;
+  padding: 5px 20px;
+  -webkit-border-top-left-radius: 10px;
+  -webkit-border-top-right-radius: 10px;
+  -moz-border-radius-topleft: 10px;
+  -moz-border-radius-topright: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.overlay-close {
+  background: transparent url('../graphics/bubble-close.png') center center no-repeat;
+  text-indent: -99999em !important;
+  z-index: 1;
+  height: 22px;
+  width: 23px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.overlay-content {
+  z-index: 9999;
+  position: absolute;
+  background: #fff;
+  width: 600px;
+  left: 50%;
+  margin-left: -300px;
+  top: 20px;
+  padding: 20px;
+  border: 1px solid #D4D4D4;
+  border-radius: 10px;
+
+  ul,
+  p {
+    margin-top: 1.3em;
+    line-height: 1.3em;
+    font-size: 1.1em;
+  }
+
+  .overlay-header + p {
+    font-size: 1.5em;
+  }
+
+  h2 {
+    font-size: 2em;
+    font-weight: bold;
+  }
+
+  ul li {
+    background: transparent url('../graphics/about-companies.png') left 1px no-repeat;
+    padding-left: 25px;
+    margin-top: 0.5em;
+    line-height: 1.3em;
+  }
+
+  ul li:first-child {
+    margin-top: 0;
+  }
+
+  .people {
+    background-image: url('../graphics/about-people.png');
+  }
+
+  .code {
+    background-image: url('../graphics/about-code.png');
   }
 }

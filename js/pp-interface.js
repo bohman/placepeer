@@ -63,10 +63,22 @@ function initSearchForm() {
 
 
 //
+// About overlay
+//
+function initAboutOverlay() {
+  $('#logo, .overlay-back, .overlay-close').click(function(e){
+    $('#about-placepeer').toggleClass('hidden');
+    return false;
+  });
+}
+
+
+//
 // Vroom vroom!
 //
 jQuery(document).ready(function() {
   //initNoise();
   initListToggle();
   initSearchForm();
+  initAboutOverlay();
 });

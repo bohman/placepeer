@@ -18,7 +18,7 @@
 <body>
   
   <div id="header">
-    <a id="logo" href="/"><b>Placepeer</b><p>About this project <br /> Beta0.7</p></a>
+    <a id="logo" href="/"><b>Placepeer</b><p>About this project<br />Beta 0.7</p></a>
     <div class="addthis_toolbox addthis_32x32_style addthis_default_style">
         <a class="addthis_button_facebook"></a>
         <a class="addthis_button_twitter"></a>
@@ -70,15 +70,34 @@
     <div id="map-canvas"></div>
   </div>
 
-<script type="text/javascript">
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-29696179-1']);
-  _gaq.push(['_trackPageview']);
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-</script>
+  <div id="about-placepeer" class="overlay hidden">
+    <div class="overlay-back"></div>
+    <div class="overlay-content">
+      <a href="#" class="overlay-close">close</a>
+      <div class="overlay-header">
+        <h2 class="pp-logo"><b>Placepeer</b></h2>
+      </div>
+      <p>Placepeer fetches time- and geotagged information to show you what and where stuff happens.</p>
+      <p>Right now we fetch stuff from Youtube, Twitter, Flickr and Instagram, but we might add more services in the future. You get a chance to stumble upon events that would never show in the usual media flow.</p>
+      <p>Simply put: We place stuff on a map to make exploring fun. Yay!</p>
+      <p>This is pretty much just a proof of concept. An awesome proof of concept of course, but there are a few errors here and there. Some are due to API limitations. Some might be because we had too much coffe while building it. Feel free to message us on Twitter or Github to let us know about your finding. Or better yet - fix the problem yourself!</p>
+      <ul>
+        <li class="companies">Sponsored by <a href="http://oddhill.se">Odd Hill</a>, <a href="http://040.se">040</a> and <a href="http://mediegymnasiet.net">Mediegymnasiet</a></li>
+        <li class="people">Built by <a href="http://twitter.com/jensgrip">Jens Grip</a>, <a href="http://twitter.com/bjornalbertsson">Björn Albertsson</a>, <a href="http://twitter.com/ojohansson">Olof Johansson</a>, <a href="http://twitter.com/punktlars">Lars Berggren</a> and <a href="http://twitter.com/linusbohman">Linus Bohman</a></li>
+        <li class="code">We're <a href="https://github.com/bohman/placepeer">open source on Github</a>!</li>
+      </ul>
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-29696179-1']);
+    _gaq.push(['_trackPageview']);
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
 </body>
 </html>
