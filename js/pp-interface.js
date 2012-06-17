@@ -55,8 +55,12 @@ function initListToggle() {
 //
 function initSearchForm() {
   // Add datepicker
+  var params = getUrlParams();
+  var defaultDate = params['searchDate'] ? params['searchDate'] : date('Y-m-d');
   $('#filter .datepicker').datepicker({
     dateFormat: 'yy-mm-dd',
+    defaultDate: defaultDate,
+    firstDay: 1,
     onSelect: function(dateText, inst) { $('#controls .searchDate').val(dateText); }
   });
 }
