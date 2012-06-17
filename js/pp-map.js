@@ -252,12 +252,17 @@
           var url = 'https://twitter.com/' + this.from_user + '/status/' + this.id_str;
           var user = this.from_user;
           var avatar = this.profile_image_url;
-          // Add media.
-          $(this.entities.media).each(function() {
-            if (this.type == 'photo' && !image) {
-              image = this.media_url + ':thumb';
-            }
-          });
+
+          // Add media
+          // This one time, at band camp, we actually got a result where an object didn't have
+          // 'entities', even though documentation said we should. So let's do an extra check. -LB
+          if(this.hasOwnProperty('entities')) {
+            $(this.entities.media).each(function() {
+              if (this.type == 'photo' && !image) {
+                image = this.media_url + ':thumb';
+              }
+            });
+          }
           addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
         }
       });
@@ -402,12 +407,11 @@
     allYourMarkers.push(marker);
 
     // Add an info window.
-
     var infoBubble = new InfoBubble({
       position: location,
       content: 'Laddar...'
     });
-    
+
     allYourInfoWindows.push(infoBubble);
 
     google.maps.event.addListener(infoBubble, 'domready', function() {
@@ -416,17 +420,17 @@
         var avatar = '';
         var text = object.text;
         var media = '';
-        
+
         if (object.avatar) {
           avatar = '<img class="avatar" src="' + object.avatar + '" />';
         }
+
         if (object.video) {
           media = object.video;
+        } else if (object.image) {
+          media = '<img src="' + object.image + '" />';
         }
-        else if (object.image) {
-          media = '<img src="' + object.image + '" width="100" />';
-        }
-        
+
         // Find urls in the text, and move them to a separate array.
         if (!media.length) {
           var urls = object.text.match(/((http|https):\/\/|www\.)\S+/gi);
@@ -457,7 +461,7 @@
           renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
         }
       }
-      
+
       var $activeListItem = $('#list .item#' + object.id).addClass('active');
       $('#list .item').not($activeListItem).removeClass('active');
     });
@@ -472,7 +476,7 @@
         this.close();
       });
       infoBubble.open(map, marker);
-      
+
       // If we have an event argument, it means that this event was triggered
       // from the marker. Scroll to the list item.
       if (typeof event != 'undefined') {
@@ -484,18 +488,20 @@
     object.marker = marker;
     return marker;
   }
-  
+
   function renderInfoBubbleContent(infoBubble, object, avatar, user, text, media) {
     text = text.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '<a href="$1" target="_blank">$1</a>'); 
-        
+
     sender = '<a href="' + object.url + '" class="sender" target="_blank">' + avatar + user + '</a>';
     text = '<p class="text">' + text + '</p>';
     if (media.length) {
       media = '<div class="media">' + media + '</div>';
     }
-    
+
+    closebutton = '<div class="close-bubble">close</div>';
+
     object.rendered = true;
-    infoBubble.setContent(sender + text + media);
+    infoBubble.setContent('<div class="bubble-content">' + sender + text + media + closebutton + '</div>');
     infoBubble.updateContent_();
   }
   

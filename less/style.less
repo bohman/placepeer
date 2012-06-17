@@ -552,13 +552,72 @@ input[type="text"] {
 
 #map #map-canvas {
   height: 100%;
-
-  p.text {
-    font-family: serif;
-  }
-
 }
 
+/* Info bubbles */
+img[src="http://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"],
+.close-bubble {
+  height: 22px !important;
+  width: 23px !important;
+  position: absolute;
+  top: 0 !important;
+  right: 0 !important;
+}
 
+img[src="http://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"] {
+  opacity: 0;
+  z-index: 2;
+  right: 11px !important;
+  top: 11px !important;
+}
 
+.close-bubble {
+  background: transparent url('../graphics/bubble-close.png') center center no-repeat;
+  text-indent: -99999em !important;
+  z-index: 1;
+}
 
+.bubble-content {
+  position: relative;
+  color: #4e4e4e;
+  padding-left: 55px;
+  padding-right: 18px;
+  max-width: 300px;
+  min-height: 48px;
+
+  .sender {
+    color: #4e4e4e;
+    text-decoration: none;
+    font-weight: bold;
+    margin-bottom: 0.2em;
+    display: inline-block;
+
+    img {
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+  }
+
+  .text {
+    line-height: 1.3em;
+
+    a {
+      text-decoration: none;
+      color: #b1b0af;
+    }
+    a:hover {
+      color: #838383;
+    }
+  }
+
+  .media {
+    margin-top: 0.5em;
+
+    img {
+      width: auto;
+      height: auto;
+      max-width: 100%;
+    }
+  }
+}
