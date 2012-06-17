@@ -339,7 +339,7 @@
         var date = strtotime(this.created_time);
         var url = this.link;
         var user = this.user.username;
-        var avatar = this.profile_picture;
+        var avatar = this.user.profile_picture;
         addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
       });
     }
