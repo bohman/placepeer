@@ -624,10 +624,10 @@
       },
       // This bit is executed upon selection of an address
       select: function(event, ui) {
-        updateForm();
-        var location = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
-        map.setCenter(location);
-        setZoom(13);
+        jQuery('#controls .searchLat').val(ui.item.latitude);
+        jQuery('#controls .searchLon').val(ui.item.longitude);
+        jQuery('#controls .mapZoomLevel').val(13);
+        jQuery('#controls .searchRadius').val(4);
       }
     }).keydown(function(event){
       if(event.keyCode == 13) {
