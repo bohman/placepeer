@@ -442,10 +442,10 @@
                 async: true,
                 complete: function(response, status) {
                   result = $.parseJSON(response.responseText);
-                  if (result.image && !object.rendered) {
+                  if (result.image) {
                     media = '<img src="' + result.image + '" width="100" />';
-                    renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
                   }
+                  renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
                 }
               });
               if (media.length) {
