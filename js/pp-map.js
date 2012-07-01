@@ -431,6 +431,7 @@
       shape: shape,
       title: object.text
     });
+
     allYourMarkers.push(marker);
 
     // Add an info window.
@@ -450,6 +451,8 @@
 
         if (object.avatar) {
           avatar = '<img class="avatar" src="' + object.avatar + '" />';
+        } else {
+          avatar = '<img class="avatar" src="' + sitepath + 'graphics/default-avatar.png" />';
         }
 
         if (object.video) {
@@ -531,7 +534,7 @@
     infoBubble.setContent('<div class="bubble-content">' + sender + text + media + closebutton + '</div>');
     infoBubble.updateContent_();
   }
-  
+
   function addListItem(object) {
     var content, user;
     if (object.image) {
@@ -552,7 +555,7 @@
 
 
   //
-  // Will reset the results, emptying our arrays, clear the list and remove the markers.
+  // Will reset the results, empty our arrays, clear the list and remove the markers.
   //
   function removeShit() {
     if (allYourMarkers) {
@@ -561,7 +564,7 @@
       }
       allYourMarkers.length = 0;
     }
-    
+
     if (allYourInfoWindows) {
       for (i=0; i < allYourInfoWindows.length; i++) {
         allYourInfoWindows[i].setMap(null);
