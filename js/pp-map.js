@@ -177,6 +177,13 @@
   function getYouTube(searchLat, searchLon, searchRadius, searchQuery) {
     var endpoint = 'https://gdata.youtube.com/feeds/api/videos';
 
+    // Max radius for YouTube is 1000 km.
+    if(searchRadius > 1000) {
+      youtubeSearchRadius = 1000;
+    } else {
+      youtubeSearchRadius = searchRadius;
+    }
+
     return jQuery.ajax({
       url: endpoint,
       data: {
@@ -185,7 +192,7 @@
         'safeSearch': 'none',
         'orderby': 'published',
         'location': searchLat + ',' + searchLon,
-        'location-radius': searchRadius + 'km',
+        'location-radius': youtubeSearchRadius + 'km',
         'q': searchQuery,
       },
       dataType: 'jsonp'
@@ -430,6 +437,7 @@
       shape: shape,
       title: object.text
     });
+
     allYourMarkers.push(marker);
 
     // Add an info window.
@@ -449,6 +457,8 @@
 
         if (object.avatar) {
           avatar = '<img class="avatar" src="' + object.avatar + '" />';
+        } else {
+          avatar = '<img class="avatar" src="' + sitepath + 'graphics/default-avatar.png" />';
         }
 
         if (object.video) {
@@ -530,7 +540,7 @@
     infoBubble.setContent('<div class="bubble-content">' + sender + text + media + closebutton + '</div>');
     infoBubble.updateContent_();
   }
-  
+
   function addListItem(object) {
     var content, user;
     if (object.image) {
@@ -551,7 +561,7 @@
 
 
   //
-  // Will reset the results, emptying our arrays, clear the list and remove the markers.
+  // Will reset the results, empty our arrays, clear the list and remove the markers.
   //
   function removeShit() {
     if (allYourMarkers) {
@@ -560,7 +570,7 @@
       }
       allYourMarkers.length = 0;
     }
-    
+
     if (allYourInfoWindows) {
       for (i=0; i < allYourInfoWindows.length; i++) {
         allYourInfoWindows[i].setMap(null);
