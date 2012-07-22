@@ -91,7 +91,9 @@
     map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
     
     // Create the marker clusterer object.
-    markerClusterer = new MarkerClusterer(map);
+    // TODO: Enable the clusterer again, It would need some configuration before
+    // it's good to go..
+    //markerClusterer = new MarkerClusterer(map);
 
     // Add markers
     doShit();
@@ -390,7 +392,9 @@
     });
     
     // Add the markers to the marker clusterer.
-    markerClusterer.addMarkers(allYourMarkers);
+    // TODO: Enable the clusterer again, It would need some configuration before
+    // it's good to go..
+    //markerClusterer.addMarkers(allYourMarkers);
 
     // Update form and set map events
     updateForm();
@@ -432,6 +436,7 @@
     // Add a marker.
     var marker = new google.maps.Marker({
       position: location,
+      map: map,
       icon: image,
       shadow: shadow,
       shape: shape,
