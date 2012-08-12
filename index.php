@@ -26,7 +26,9 @@
   <div id="header" class="gradient-blue subtle-shadow">
     <a id="logo" href="/"><h1 class="placepeer">Placepeer</h1><p class="version">Beta 0.8</p><p class="about">About this project</p></a>
     <div class="social-media">
+      <p>Donate</p>
       <a class="flattr" href="http://flattr.com/thing/834017/Placepeer" target="_blank">Flattr Placepeer!</a>
+      <p>Share</p>
       <a class="facebook" href="http://www.facebook.com/sharer.php?s=100&p[title]=Placepeer&p[summary]=Placepeer%20-%20an%20awesome%20way%20to%20see%20what's%20happening%20where!&p[url]=http%3A%2F%2Fplacepeer.com&p[images][0]=http://placepeer.com/graphics/logo.png" target="_blank">Share Placepeer on Facebook</a>
       <a class="twitter" href="http://twitter.com/share?url=http%3A%2F%2Fplacepeer.com&text=Placepeer%20-%20an%20awesome%20way%20to%20see%20what's%20happening%20where!" target="_blank">Share Placepeer on Twitter</a>
     </div>
