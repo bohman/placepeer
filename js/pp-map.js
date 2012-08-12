@@ -521,8 +521,7 @@
       // If we have an event argument, it means that this event was triggered
       // from the marker. Scroll to the list item.
       if (typeof event != 'undefined') {
-        $('#list-wrapper .tabs a[data-tab=list]').click();
-        $('#tab-content').scrollTo('#' + object.id, 250, {});
+        $('body').scrollTo('#' + object.id, 250, {});
       }
     });
 
@@ -539,10 +538,10 @@
       media = '<div class="media">' + media + '</div>';
     }
 
-    closebutton = '<div class="close-bubble">close</div>';
+    closebutton = '<div class="close-button">close</div>';
 
     object.rendered = true;
-    infoBubble.setContent('<div class="bubble-content">' + sender + text + media + closebutton + '</div>');
+    infoBubble.setContent('<div class="bubble">' + sender + text + media + closebutton + '</div>');
     infoBubble.updateContent_();
   }
 
@@ -558,7 +557,7 @@
     content = '<div class="content">' + content + '</div>';
     user = '<h3 class="user">' + object.user + '</h3>';
 
-    $listItem = $('<div id="' + object.id + '" class="item">' + user + content + '</div>').appendTo('#list');
+    $listItem = $('<div id="' + object.id + '" class="item subtle-shadow gradient-light-grey">' + user + content + '</div>').appendTo('#list');
 
     object.$listItem = $listItem;
     return $listItem;
@@ -638,6 +637,8 @@
   var geocoder = new google.maps.Geocoder();
   function initForm() {
     var controls = $('#controls');
+    var mapoverlay = $('#map-overlay');
+
     // Jump to location input
     controls.find('.jumpToLocation').autocomplete({
       // This bit uses the geocoder to fetch address values
@@ -668,7 +669,7 @@
     });
 
     // Custom zoom controls
-    controls.find('.zoom')
+    mapoverlay.find('#zoom')
       .prepend('<div class="mapZoomer"></div>')
       .prepend('<a href="#" class="zoom-in">+</a>')
       .append('<a href="#" class="zoom-out">-</a>')
@@ -681,10 +682,10 @@
         slide: function(event, ui) {
           setZoom(ui.value);
         }
-      })
+      }).siblings()
       .siblings('.zoom-in').click(function(e){
         var zoomLevel = map.getZoom();
-        var maxZoom = controls.find('.mapZoomer').slider('option', 'max');
+        var maxZoom = mapoverlay.find('.mapZoomer').slider('option', 'max');
         if(zoomLevel < maxZoom) {
           setZoom(map.getZoom()+1)
         }
@@ -692,7 +693,7 @@
       })
       .siblings('.zoom-out').click(function(e){
         var zoomLevel = map.getZoom();
-        var minZoom = controls.find('.mapZoomer').slider('option', 'min');
+        var minZoom = mapoverlay.find('.mapZoomer').slider('option', 'min');
         if(zoomLevel > minZoom) {
           setZoom(map.getZoom()-1)
         }
@@ -702,7 +703,7 @@
 
   function setZoom(integer) {
     map.setZoom(integer);
-    $('#controls .mapZoomer').slider('option', 'value', integer)
+    $('#map-overlay .mapZoomer').slider('option', 'value', integer)
       .siblings('.mapZoomLevel').val(integer);
   }
 

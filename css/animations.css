@@ -1,0 +1,15 @@
+input[type="text"],
+textarea {
+  -moz-transition-property: all;
+  -moz-transition-duration: 0.2s;
+  -moz-transition-delay: 0;
+  -webkit-transition-property: all;
+  -webkit-transition-duration: 0.2s;
+  -webkit-transition-delay: 0;
+  -o-transition-property: all;
+  -o-transition-duration: 0.2s;
+  -o-transition-delay: 0;
+  transition-property: all;
+  transition-duration: 0.2s;
+  transition-delay: 0;
+}

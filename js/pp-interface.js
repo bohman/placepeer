@@ -16,53 +16,44 @@ function initNoise() {
 
 
 //
-// Behaviour: let us open and close the form/list
-//
-function initListToggle() {
-  // Select the tabs and the sidebar elements that should toggle.
-  $sidebarTabs = $('#list-wrapper .tabs a[data-tab]');
-  $sidebarWrappers = $('#tab-content').children();
-
-  // Initially hide the wrapper for the tabs that aren't active.
-  $sidebarWrappers.filter('#' + $sidebarTabs.not('.active').data('tab')).hide();
-
-  // Add a click behavior that will toggle the tabs.
-  $sidebarTabs.click(function(event) {
-    event.preventDefault();
-    // Move the active class to the current tab.
-    $(this).addClass('active');
-    $sidebarTabs.not(this).removeClass('active');
-    // Toggle the sidebar wrappers.
-    $sidebarWrappers.filter('#' + $(this).data('tab')).show();
-    $sidebarWrappers.not('#' + $(this).data('tab')).hide();
-  });
-
-  // Activate the list tab if the user has performed a search.
-  if (window.location.search.length) {
-    $sidebarTabs.filter('[data-tab=list]').click();
-  }
-
-  // Toggle the sidebar.
-  $('#toggle-sidebar').click(function(event) {
-    $('#list-wrapper').toggleClass('hidden');
-    $('#map').toggleClass('sidebar-hidden');
-  });
-}
-
-
-//
 // Sets up search form controls
 //
 function initSearchForm() {
   // Add datepicker
+  $('#controls .date').prepend('<div class="datepicker"></div>');
   var params = getUrlParams();
+  var daysToGoBack = 7;
   var defaultDate = params['searchDate'] ? params['searchDate'] : date('Y-m-d');
-  $('#filter .datepicker').datepicker({
-    dateFormat: 'yy-mm-dd',
-    defaultDate: defaultDate,
-    firstDay: 1,
-    onSelect: function(dateText, inst) { $('#controls .searchDate').val(dateText); }
+
+  var i = 0;
+  while(i < daysToGoBack) {
+    var then = strtotime(date('Y-m-d'))-(86400*i);
+    var classes = '';
+    if(defaultDate === date('Y-m-d', then)) {
+      classes = ' class="active"';
+    } else {
+      classes = '';
+    }
+    $('.datepicker').prepend('<a'+ classes +' href="#" data-date="'+ date('Y-m-d', then) +'"><b class="dayname">'+ date('D', then) +'</b><b class="daynumber">'+ date('j', then) +'</b></a>');
+    i++;
+  }
+
+  $('.datepicker a').click(function(e){
+    var then = $(this).attr('data-date');
+    $('.datepicker a').removeClass('active');
+    $(this).addClass('active');
+    $('#controls .searchDate').val(then);
+    e.preventDefault();
   });
+
+
+
+  //$('#controls .datepicker').datepicker({
+  //  dateFormat: 'yy-mm-dd',
+  //  defaultDate: defaultDate,
+  //  firstDay: 1,
+  //  onSelect: function(dateText, inst) { $('#controls .searchDate').val(dateText); }
+  //});
 }
 
 
@@ -70,7 +61,7 @@ function initSearchForm() {
 // About overlay
 //
 function initAboutOverlay() {
-  $('#logo, .overlay-back, .overlay-close').click(function(e){
+  $('#logo, .overlay-back, .overlay .close-button').click(function(e){
     $('#about-placepeer').toggleClass('hidden');
     return false;
   });
@@ -82,7 +73,6 @@ function initAboutOverlay() {
 //
 jQuery(document).ready(function() {
   //initNoise();
-  initListToggle();
   initSearchForm();
   initAboutOverlay();
 });
