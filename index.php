@@ -22,6 +22,7 @@
   <script type="text/javascript" src="js/pp-interface.js"></script>
 </head>
 <body>
+<<<<<<< HEAD
 
   <div id="header" class="gradient-blue subtle-shadow">
     <a id="logo" href="/"><h1 class="placepeer">Placepeer</h1><p class="version">Beta 0.8</p><p class="about">About this project</p></a>
