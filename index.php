@@ -4,7 +4,7 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <title>Placepeer</title>
   <link href='http://fonts.googleapis.com/css?family=Montez' rel='stylesheet' type='text/css'>
-  <link href='http://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+  <link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" id="jquery-ui-css"  href="css/zoomer-base/jquery-ui-1.8.20.custom.css" type="text/css" media="all">
   <link rel="stylesheet" id="placepeer-reusables"  href="css/reusables.css" type="text/css" media="all">
   <link rel="stylesheet" id="placepeer-animations"  href="css/animations.css" type="text/css" media="all">
