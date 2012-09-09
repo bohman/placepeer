@@ -71,6 +71,7 @@ a:focus {
 textarea,
 input[type="text"] {
   font-family: Verdana, sans-serif;
+  font-size: 11px;
   border: 1px solid #d1d1d1;
   border-radius: 50px;
   background: #fff url('../graphics/search-icon.png') 5px center no-repeat;
@@ -82,6 +83,34 @@ textarea:focus,
 input[type="text"]:focus {
   outline: 0;
   background-color: #FBF5E4;
+}
+
+.ui-autocomplete {
+  max-width: 250px;
+  font-size: 11px;
+  border: 1px solid #d1d1d1;
+}
+
+.ui-autocomplete a {
+  display: block;
+  padding: 5px;
+  cursor: pointer;
+  background: #fff;
+  color: #000;
+  font-family: Verdana, sans-serif;
+  line-height: 1.3em;
+  border-top: 1px solid #E6E6E6;
+}
+
+.ui-autocomplete li:first-child a {
+  border-top: 0;
+}
+
+.ui-autocomplete a:hover,
+.ui-autocomplete a:focus,
+.ui-autocomplete a.ui-state-hover {
+  background-color: #FBF5E4;
+  outline: 0;
 }
 
 

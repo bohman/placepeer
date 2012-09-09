@@ -36,6 +36,7 @@
 
 
 /* DESIGN ELEMENTS ---------------- */
+.ui-autocomplete,
 .subtle-shadow {
   box-shadow: 0 1px 3px rgba(00, 00, 00, 0.4);
 }
