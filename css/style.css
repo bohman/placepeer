@@ -30,14 +30,15 @@ body {
 
 #sidebar {
   width: 276px;
+  float: right;
 }
 
 #map-canvas,
 #map {
   position: fixed !important; /* To overwrite position: relative automatically set on map-canvas */
   bottom: 0;
-  right: 0;
-  left: 276px;
+  right: 276px;
+  left: 0;
   top: 60px;
   background: #555;
 }
