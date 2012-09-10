@@ -173,9 +173,9 @@ input[type="text"]:focus {
 
 #header .social-media a {
   display: inline-block;
-  margin-left: 5px;
+  margin-left: 0;
   height: 40px;
-  width: 32px;
+  width: 40px;
   text-indent: -9999em;
   background: transparent url('../graphics/social-flattr.png') top left no-repeat;
 }
