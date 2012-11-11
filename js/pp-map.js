@@ -42,6 +42,8 @@
   var searchQuery = '';
   var searchDate = date('Y-m-d');
   var mapZoomLevel = 13;
+  var mapMaxZoom = 18;
+  var mapMinZoom = 13;
 
 
   //
@@ -82,6 +84,8 @@
     center = new google.maps.LatLng(searchLat, searchLon);
     var mapOptions = {
       zoom: mapZoomLevel,
+      maxZoom: mapMaxZoom,
+      minZoom: mapMinZoom,
       center: center,
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       streetViewControl: false,
@@ -671,8 +675,8 @@
       .find('label, input').hide()
       .siblings('.mapZoomer').slider({
         orientation: 'vertical',
-        min: 0,
-        max: 19,
+        min: 13,
+        max: 18,
         value: map.getZoom(),
         slide: function(event, ui) {
           setZoom(ui.value);
