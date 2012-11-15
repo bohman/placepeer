@@ -118,8 +118,8 @@
     jQuery.when(
       getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate),
       getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate),
-      getYouTube(searchLat, searchLon, searchRadius, searchQuery),
-      getInstagram(searchLat, searchLon, searchRadius, searchQuery, searchDate)
+      getYouTube(searchLat, searchLon, searchRadius, searchQuery)
+//      getInstagram(searchLat, searchLon, searchRadius, searchQuery, searchDate)
     ).then(buildShit);
 
     initiated = true;
@@ -343,7 +343,7 @@
       });
     }
     
-    if (instagramResult[0].meta.code == 200 && typeof instagramResult[0].data == 'object') {
+/*    if (instagramResult[0].meta.code == 200 && typeof instagramResult[0].data == 'object') {
       $(instagramResult[0].data).each(function(index) {
         if (searchQuery) {
           // Perform a manual search within the caption.
@@ -375,7 +375,7 @@
         addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
       });
     }
-
+*/
     // In case we didn't find anything.
     if (allYourNodes.length == 0) {
       $('#list').html("<div class=\"empty-text\"><p>We're terribly sorry. but we couldn't find anything that met your search criteria.</p><p>Please alter your search, and try again.</p></div>");
