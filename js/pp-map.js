@@ -25,33 +25,13 @@
 
   **/
 
-
-  //
-  // Settings
-  //
-
-  // Default values
-  if(google.loader.ClientLocation != null) {
-    var searchLat = google.loader.ClientLocation.latitude;
-    var searchLon = google.loader.ClientLocation.longitude;
-  } else {
-    var searchLat = 55.596911;
-    var searchLon = 12.998478;
-  }
-  var searchRadius = 4;
-  var searchQuery = '';
-  var searchDate = date('Y-m-d');
-  var mapZoomLevel = 13;
-  var mapMaxZoom = 18;
-  var mapMinZoom = 13;
-
-
   //
   // Set up global variables and run map_init() as a callback.
   //
   var sitepath = window.location.protocol + '//' + window.location.hostname + window.location.pathname;
   var center;
   var map;
+  var geocoder;
   var markerClusterer;
   var initiated = false;
   var allYourNodes = [];
@@ -66,41 +46,52 @@
   // it basically gives birth to the entire map. You dig?
   //
   function mapInit() {
-
     jQuery('#map').removeClass('no-js');
 
-    // Update default values if we have parameters
+    // Set the initial latitude and longitude for the map. We'll look for the
+    // data in the URL. If it's not present, we'll try to get the users real
+    // location. And if that fail's we'll stick with Malmö, since it's awesome.
     var params = getUrlParams();
-    if(params.length) {
-      searchLat = params['searchLat'] ? params['searchLat'] : searchLat;
-      searchLon = params['searchLon'] ? params['searchLon'] : searchLon;
-      searchRadius = params['searchRadius'] ? params['searchRadius'] : searchRadius;
-      searchQuery = params['searchQuery'] ? params['searchQuery'] : searchQuery;
-      searchDate = strtotime(params['searchDate'] ? params['searchDate'] + ' 00:00' : searchDate + ' 00:00');
-      mapZoomLevel = parseInt(params['mapZoomLevel'] ? params['mapZoomLevel'] : mapZoomLevel);
+    if (params['lat'] && params['lon']) {
+      searchLat = params['lat'];
+      searchLon = params['lon'];
+    }
+    else if (google.loader.ClientLocation != null) {
+      var searchLat = google.loader.ClientLocation.latitude;
+      var searchLon = google.loader.ClientLocation.longitude;
+    }
+    else {
+      var searchLat = 55.596911;
+      var searchLon = 12.998478;
     }
 
-    // Initial map load: build map
-    center = new google.maps.LatLng(searchLat, searchLon);
-    var mapOptions = {
-      zoom: mapZoomLevel,
-      maxZoom: mapMaxZoom,
-      minZoom: mapMinZoom,
-      center: center,
+    // Create the map.
+    map = new google.maps.Map(document.getElementById('map-canvas'), {
+      zoom: parseInt(params['zoom'] ? params['zoom'] : 13),
+      maxZoom: 18,
+      minZoom: 11,
+      center: new google.maps.LatLng(searchLat, searchLon),
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       streetViewControl: false,
       scrollwheel: false,
       disableDefaultUI: true
-    }
-    map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-    
-    // Create the marker clusterer object.
-    // TODO: Enable the clusterer again, It would need some configuration before
-    // it's good to go..
-    //markerClusterer = new MarkerClusterer(map);
+    });
 
-    // Add markers
-    doShit();
+    // When the map has finished loading for the first time, we'll automatically
+    // do the initial shit.
+    google.maps.event.addListener(map, 'tilesloaded', function(event) {
+      if (!initiated) {
+        updateParams();
+        doShit();
+        initiated = true;
+      }
+    });
+    
+    google.maps.event.addListener(map, 'dragend', function(event) { updateParams(); });
+    google.maps.event.addListener(map, 'zoom_changed', function(event) { updateParams(); });
+
+    // Create the geocoder object.
+    geocoder = new google.maps.Geocoder();
 
     // Initialize form controls
     initForm();
@@ -111,41 +102,83 @@
   // Runs everything in the correct order.
   //
   function doShit() {
+    // Remove the previous shit.
     if (initiated) {
       removeShit();
     }
 
-    jQuery.when(
-      getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate),
-      getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate),
-      getYouTube(searchLat, searchLon, searchRadius, searchQuery),
-      getInstagram(searchLat, searchLon, searchRadius, searchQuery, searchDate)
-    ).then(buildShit);
+    // Get the parameters from the url.
+    var params = getUrlParams();
+    searchLat = params['lat'];
+    searchLon = params['lon'];
+    searchQuery = params['q'];
+    searchDate = strtotime(params['date'] + ' 00:00');
+    searchRadius = getCurrentRadius();
 
-    initiated = true;
+    // Get the shit from various places.
+    getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate, 1);
+    getFlickr(searchLat, searchLon, searchRadius, searchQuery, searchDate);
+    getYouTube(searchLat, searchLon, searchRadius, searchQuery, searchDate);
+    getInstagram(searchLat, searchLon, searchRadius, searchQuery, searchDate);
   }
 
 
   //
   // Get functions. Fetch data from every service, and add the results to allYourNodes.
   //
-  function getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
+  function getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate, page) {
     var endpoint = 'http://search.twitter.com/search.json';
+    var searchDay = date('d', searchDate);
+    var resultDay = searchDay;
 
-    // Ensuring search date is + one day,
-    // since Twitter until doesn't include the
-    // date you set
-    searchDate = searchDate + 60*60*24;
-
-    return jQuery.ajax(endpoint, {
+    jQuery.ajax(endpoint, {
       dataType: 'jsonp',
       data: {
+        page: page,
         include_entities: true,
         q: searchQuery,
         geocode: searchLat + ',' + searchLon + ',' + searchRadius + 'km',
-        until: date('Y-m-d', searchDate),
+        until: date('Y-m-d', searchDate + 60*60*24),
         rpp: 100,
         result_type: 'recent'
+      },
+      success: function(data, status) {
+        console.log('Twitter: ' + page, data);
+        if (typeof data['results'] == 'object') {
+          $(data['results']).each(function(index) {
+            resultDay = window.date('d', strtotime(this.created_at));
+            if (this.geo && resultDay == searchDay) {
+              // Set the arguments.
+              var id = 'twitter-' + index;
+              var lat = this.geo.coordinates[0];
+              var lon = this.geo.coordinates[1];
+              var text = this.text;
+              var image = false;
+              var video = false;
+              var date = strtotime(this.created_at);
+              var url = 'https://twitter.com/' + this.from_user + '/status/' + this.id_str;
+              var user = this.from_user;
+              var avatar = this.profile_image_url;
+  
+              // Add media
+              // This one time, at band camp, we actually got a result where an object didn't have
+              // 'entities', even though documentation said we should. So let's do an extra check. -LB
+              if(this.hasOwnProperty('entities')) {
+                $(this.entities.media).each(function() {
+                  if (this.type == 'photo' && !image) {
+                    image = this.media_url + ':thumb';
+                  }
+                });
+              }
+              
+              buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
+            }
+          });
+  
+          if (resultDay >= searchDay) {
+            getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate, page + 1)
+          }
+        }
       }
     });
   }
@@ -161,7 +194,7 @@
       flickrSearchRadius = searchRadius;
     }
 
-    return jQuery.ajax({
+    jQuery.ajax({
       url: endpoint,
       data: {
         method: 'flickr.photos.search',
@@ -176,7 +209,26 @@
         max_taken_date: date('Y-m-d', searchDate),
         radius: flickrSearchRadius + 'km'
       },
-      dataType: 'jsonp'
+      dataType: 'jsonp',
+      success: function(data, status) {
+        if (data.stat == 'ok' && typeof data['photos']['photo'] == 'object') {
+          $(data['photos']['photo']).each(function(index) {
+            // Set the arguments.
+            var id = 'flickr-' + index;
+            var lat = this.latitude;
+            var lon = this.longitude;
+            var text = this.title;
+            var image = this.url_m;
+            var video = false;
+            var date = strtotime(this.datetaken);
+            var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
+            var user = this.ownername;
+            var avatar = false;
+            
+            buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
+          });
+        }
+      }
     });
   }
   
@@ -190,7 +242,7 @@
       youtubeSearchRadius = searchRadius;
     }
 
-    return jQuery.ajax({
+    jQuery.ajax({
       url: endpoint,
       data: {
         'v': 2,
@@ -201,14 +253,37 @@
         'location-radius': youtubeSearchRadius + 'km',
         'q': searchQuery,
       },
-      dataType: 'jsonp'
+      dataType: 'jsonp',
+      success: function(data, status) {
+        if (typeof data['feed']['entry'] == 'object') {
+          $(data['feed']['entry']).each(function(index) {
+            var date = this.yt$recorded ? this.yt$recorded.$t : window.date('Y-m-d', strtotime(this.published.$t));
+            if (this.georss$where && date == window.date('Y-m-d', searchDate)) {
+              // Set the arguments.
+              var id = 'youtube-' + index;
+              var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
+              var lat = coordinates[0];
+              var lon = coordinates[1];
+              var text = this.title.$t;
+              var image = this.media$group.media$thumbnail[0].url;
+              var video = '<object width="280" height="210"><param name="movie" value="' + this.content.src + '"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + this.content.src + '" type="application/x-shockwave-flash" width="280" height="210" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
+              var date = strtotime(this.published.$t);
+              var url = this.link[0].href;
+              var user = this.author[0].name.$t;
+              var avatar = false;
+              
+              buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
+            }
+          });
+        }
+      }
     });
   }
   
   function getInstagram(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var endpoint = 'https://api.instagram.com/v1/media/search';
 
-    return jQuery.ajax({
+    jQuery.ajax({
       url: endpoint,
       data: {
         'client_id': 'd340e84f802940fc8309539b6dc5d4fa',
@@ -218,16 +293,63 @@
         'max_timestamp': searchDate + 60*60*24,
         'distance': searchRadius * 1000
       },
-      dataType: 'jsonp'
+      dataType: 'jsonp',
+      success: function(data, status) {
+        if (data.meta.code == 200 && typeof data.data == 'object') {
+          $(data.data).each(function(index) {
+            if (searchQuery) {
+              // Perform a manual search within the caption.
+              if (!this.caption) {
+                return;
+              }
+              if (this.caption.text.toLowerCase().search(searchQuery.toLowerCase()) == -1) {
+                return;
+              }
+            }
+          
+            var id = 'instagram-' + index;
+            var lat = this.location.latitude;
+            var lon = this.location.longitude;
+            var text = this.caption ? this.caption.text : '';
+            var image = this.images.thumbnail.url;
+            var video = false;
+            var date = strtotime(this.created_time);
+            var url = this.link;
+            var user = this.user.username;
+            var avatar = this.user.profile_picture;
+            
+            buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
+          });
+        }
+      }
     });
   }
 
-  function addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar) {
+  //
+  // Add the results to the map, and create the initial list.
+  //
+  function buildShit(id, lat, lon, text, image, video, date, url, user, avatar) {
+    var node = addToAllYourNodes(id, lat, lon, text, image, video, date, url, user, avatar);
+
+    // Use allYourNodes to add markers to map and build list
+    var marker = addMarker(node);
+    var $listItem = addListItem(node);
+    $listItem.click(function() {
+      google.maps.event.trigger(marker, 'click');
+    });
+    
+    
+    // Add the markers to the marker clusterer.
+    // TODO: Enable the clusterer again, It would need some configuration before
+    // it's good to go..
+    //markerClusterer.addMarkers(allYourMarkers);    
+  }
+
+  function addToAllYourNodes(id, lat, lon, text, image, video, date, url, user, avatar) {
     var node = {
       id: id,
       lat: lat,
       lon: lon,
-      distance: distance,
       text: text,
       image: image,
       video: video,
@@ -237,173 +359,8 @@
       avatar: avatar
     }
     allYourNodes.push(node);
-  }
-
-  // Unused for now. Would like to add a generic error message
-  // when we can't get an answer or such.
-  function serviceTimeout() {
-    return 'timeout';
-  }
-
-
-  //
-  // Add the results to the map, and create the initial list.
-  //
-  function buildShit(twitterResult, flickrResult, youTubeResult, instagramResult) {
-
-    // Add twitter result to allYourNodes
-    if (typeof twitterResult[0]['results'] == 'object') {
-      $(twitterResult[0]['results']).each(function(index) {
-        if (this.geo) {
-          // Set the arguments.
-          var id = 'twitter-' + index;
-          var lat = this.geo.coordinates[0];
-          var lon = this.geo.coordinates[1];
-          var distance = distHaversine({
-            lat: lat,
-            lon: lon
-          },{
-            lat: center.lat(),
-            lon: center.lng()
-          });
-          var text = this.text;
-          var image = false;
-          var video = false;
-          var date = strtotime(this.created_at);
-          var url = 'https://twitter.com/' + this.from_user + '/status/' + this.id_str;
-          var user = this.from_user;
-          var avatar = this.profile_image_url;
-
-          // Add media
-          // This one time, at band camp, we actually got a result where an object didn't have
-          // 'entities', even though documentation said we should. So let's do an extra check. -LB
-          if(this.hasOwnProperty('entities')) {
-            $(this.entities.media).each(function() {
-              if (this.type == 'photo' && !image) {
-                image = this.media_url + ':thumb';
-              }
-            });
-          }
-          addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
-        }
-      });
-    }
-
-    // Add flickr result to allYourNodes
-    if (flickrResult[0].stat == 'ok' && typeof flickrResult[0]['photos']['photo'] == 'object') {
-      $(flickrResult[0]['photos']['photo']).each(function(index) {
-        // Set the arguments.
-        var id = 'flickr-' + index;
-        var lat = this.latitude;
-        var lon = this.longitude;
-        var distance = distHaversine({
-            lat: lat,
-            lon: lon
-          },{
-            lat: center.lat(),
-            lon: center.lng()
-          });
-        var text = this.title;
-        var image = this.url_m;
-        var video = false;
-        var date = strtotime(this.datetaken);
-        var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
-        var user = this.ownername;
-        var avatar = false;
-        addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
-      });
-    }
-
-    // Add YouTube results to allYourNodes.
-    if (typeof youTubeResult[0]['feed']['entry'] == 'object') {
-      $(youTubeResult[0]['feed']['entry']).each(function(index) {
-        var date = this.yt$recorded ? this.yt$recorded.$t : window.date('Y-m-d', strtotime(this.published.$t));
-        if (this.georss$where && date == window.date('Y-m-d', searchDate)) {
-          // Set the arguments.
-          var id = 'youtube-' + index;
-          var coordinates = this.georss$where.gml$Point.gml$pos.$t.split(' ');
-          var lat = coordinates[0];
-          var lon = coordinates[1];
-          var distance = distHaversine({
-            lat: lat,
-            lon: lon
-          },{
-            lat: center.lat(),
-            lon: center.lng()
-          });
-          var text = this.title.$t;
-          var image = this.media$group.media$thumbnail[0].url;
-          var video = '<object width="280" height="210"><param name="movie" value="' + this.content.src + '"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + this.content.src + '" type="application/x-shockwave-flash" width="280" height="210" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
-          var date = strtotime(this.published.$t);
-          var url = this.link[0].href;
-          var user = this.author[0].name.$t;
-          var avatar = false;
-          addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
-        }
-      });
-    }
     
-    if (instagramResult[0].meta.code == 200 && typeof instagramResult[0].data == 'object') {
-      $(instagramResult[0].data).each(function(index) {
-        if (searchQuery) {
-          // Perform a manual search within the caption.
-          if (!this.caption) {
-            return;
-          }
-          if (this.caption.text.toLowerCase().search(searchQuery.toLowerCase()) == -1) {
-            return;
-          }
-        }
-      
-        var id = 'instagram-' + index;
-        var lat = this.location.latitude;
-        var lon = this.location.longitude;
-        var distance = distHaversine({
-          lat: lat,
-          lon: lon
-        },{
-          lat: center.lat(),
-          lon: center.lng()
-        });
-        var text = this.caption ? this.caption.text : '';
-        var image = this.images.thumbnail.url;
-        var video = false;
-        var date = strtotime(this.created_time);
-        var url = this.link;
-        var user = this.user.username;
-        var avatar = this.user.profile_picture;
-        addToAllYourNodes(id, lat, lon, distance, text, image, video, date, url, user, avatar);
-      });
-    }
-
-    // In case we didn't find anything.
-    if (allYourNodes.length == 0) {
-      $('#list').html("<div class=\"empty-text\"><p>We're terribly sorry. but we couldn't find anything that met your search criteria.</p><p>Please alter your search, and try again.</p></div>");
-    }
-
-    // Sort the nodes depending on the distance from the center of the map.
-    allYourNodes.sort(function(a, b) {
-      return a.distance <= b.distance ? -1 : 1;
-    });
-
-    // Use allYourNodes to add markers to map and build list
-    jQuery.each(allYourNodes, function(index) {
-      var marker = addMarker(this);
-      var $listItem = addListItem(this);
-      $listItem.click(function() {
-        google.maps.event.trigger(marker, 'click');
-      });
-    });
-    
-    // Add the markers to the marker clusterer.
-    // TODO: Enable the clusterer again, It would need some configuration before
-    // it's good to go..
-    //markerClusterer.addMarkers(allYourMarkers);
-
-    // Update form and set map events
-    updateForm();
-    google.maps.event.addListener(map, 'center_changed', function(event) { updateForm(); });
-    google.maps.event.addListener(map, 'zoom_changed', function(event) { updateForm(); });
+    return node;
   }
 
   function addMarker(object) {
@@ -585,8 +542,11 @@
       }
       allYourInfoWindows.length = 0;
     }
+    
+    allYourNodes.length = 0;
 
     // Kill list.
+    $('#list').html('');
   }
   
 
@@ -614,20 +574,20 @@
 
 
   //
-  // updateForm()
+  // updateParams()
   // Updates front end form with correct values from map
   //
-  function updateForm() {
+  function updateParams() {
+    var hashParams = new Array();
     var curLatLon = map.getCenter();
-    searchLat = curLatLon.lat();
-    searchLon = curLatLon.lng();
-    searchRadius = getCurrentRadius();
-    mapZoomLevel = map.getZoom();
-    jQuery('#controls .searchLat').val(searchLat);
-    jQuery('#controls .searchLon').val(searchLon);
-    jQuery('#controls .searchRadius').val(searchRadius);
-    jQuery('#controls .mapZoomLevel').val(mapZoomLevel);
-    jQuery('#controls .searchDate').val(date('Y-m-d', searchDate));
+    hashParams.push('q=' + jQuery('#controls .searchQuery').val());
+    hashParams.push('date=' + jQuery('#controls .searchDate').val());
+    hashParams.push('lat=' + curLatLon.lat());
+    hashParams.push('lon=' + curLatLon.lng());
+    hashParams.push('zoom=' + map.getZoom());
+    hashParams.push('radius=' + getCurrentRadius());
+    
+    location.hash = hashParams.join('&');
     jQuery('#controls .jumpToLocation').val('');
   }
 
@@ -638,10 +598,15 @@
   //
   // TODO: Move to interface.js. Probably have to move map variables into a separate namespace.
   //
-  var geocoder = new google.maps.Geocoder();
   function initForm() {
     var controls = $('#controls');
     var mapoverlay = $('#map-overlay');
+
+    controls.submit(function(event) {
+      event.preventDefault();
+      updateParams();
+      doShit();
+    });
 
     // Jump to location input
     controls.find('.jumpToLocation').autocomplete({
@@ -660,10 +625,9 @@
       },
       // This bit is executed upon selection of an address
       select: function(event, ui) {
-        jQuery('#controls .searchLat').val(ui.item.latitude);
-        jQuery('#controls .searchLon').val(ui.item.longitude);
-        jQuery('#controls .mapZoomLevel').val(13);
-        jQuery('#controls .searchRadius').val(4);
+        var jumpTo = new google.maps.LatLng(ui.item.latitude, ui.item.longitude);
+        map.panTo(jumpTo);
+        updateParams();
       }
     });
 
@@ -675,7 +639,7 @@
       .find('label, input').hide()
       .siblings('.mapZoomer').slider({
         orientation: 'vertical',
-        min: 13,
+        min: 11,
         max: 18,
         value: map.getZoom(),
         slide: function(event, ui) {

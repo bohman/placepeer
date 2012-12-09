@@ -1,3 +1,9 @@
+<?php
+  // Normalize the input variables.
+  date_default_timezone_set('Europe/Stockholm');
+  $search_date = date('Y-m-d');
+?>
+
 <!DOCTYPE html>
 <html dir="ltr" lang="en-US">
 <head>
@@ -10,7 +16,7 @@
   <link rel="stylesheet" id="placepeer-animations"  href="css/animations.css" type="text/css" media="all">
   <link rel="stylesheet" id="placepeer-style"  href="css/style.css" type="text/css" media="all">
   <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCBZ5stPtmfRqLgbtjwd-SCGApkG_OlnDU&sensor=false"></script>
+  <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyCBZ5stPtmfRqLgbtjwd-SCGApkG_OlnDU&sensor=false&libraries=geometry"></script>
   <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobubble/src/infobubble.js"></script>
   <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
   <script type="text/javascript" src="https://www.google.com/jsapi"></script>
@@ -34,22 +40,19 @@
     </div>
   </div>
 
-  <form id="controls" method="get" action="<?php $_SERVER['REQUEST_URI']; ?>">
+  <form id="controls" method="get" action="<?php print $_SERVER['REQUEST_URI']; ?>">
     <div id="sidebar" class="subtle-shadow">
       <div class="form-item geo gradient-light-grey">
         <label for="jumpToLocation">Jump to location:</label>
         <input type="text" name="jumpToLocation" class="jumpToLocation" placeholder="Jump to location" />
-        <input type="hidden" name="searchLat" class="searchLat" value="" />
-        <input type="hidden" name="searchLon" class="searchLon" value="" />
-        <input type="hidden" name="searchRadius" class="searchRadius" value="" />
       </div>
       <div class="form-item keyword gradient-light-grey">
         <label for="searchQuery">Search for keyword:</label>
-        <input type="text" name="searchQuery" class="searchQuery" value="<?php echo $_GET['searchQuery']; ?>" placeholder="Search for keyword" />
+        <input type="text" name="searchQuery" class="searchQuery" placeholder="Search for keyword" />
       </div>
       <div class="form-item date gradient-light-grey">
         <label for="searchDate">Date:</label>
-        <input type="text" name="searchDate" class="searchDate" value="<?php echo $_GET['searchDate']; ?>" />
+        <input type="text" name="searchDate" class="searchDate" value="<?php print $search_date; ?>" />
       </div>
       <div class="form-item submit gradient-dark-grey">
         <input class="submit" type="submit" value="Search and display" />
@@ -66,7 +69,6 @@
         */ ?>
         <div id="zoom">
           <label for="zoom">Zoom:</label>
-          <input type="text" name="mapZoomLevel" class="mapZoomLevel" value="" />
         </div>
       </div>
     </div>
