@@ -144,7 +144,7 @@
         if (typeof data['results'] == 'object') {
           $(data['results']).each(function(index) {
             resultDay = window.date('d', strtotime(this.created_at));
-            if (this.geo && resultDay == searchDay) {
+            if (this.geo && resultDay == searchDay && this.geo.coordinates[0] != '0' && this.geo.coordinates[1] != '0') {
               // Set the arguments.
               var id = 'twitter-' + page + '-' + index;
               var lat = this.geo.coordinates[0];
