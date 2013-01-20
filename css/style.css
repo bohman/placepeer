@@ -130,6 +130,10 @@ input[type="text"]:focus {
   vertical-align: middle;
 }
 
+#header #logo .placepeer {
+  margin-top: -2px;
+}
+
 #header .version,
 #header .about,
 #header .social-media p {
@@ -138,8 +142,8 @@ input[type="text"]:focus {
 
 #header .version {
   position: absolute;
-  bottom: 3px;
-  left: 160px;
+  bottom: 5px;
+  left: 156px;
   font-size: 11px;
 }
 
