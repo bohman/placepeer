@@ -337,7 +337,6 @@
       google.maps.event.trigger(marker, 'click');
     });
 
-
     // Add the markers to the marker clusterer.
     // TODO: Enable the clusterer again, It would need some configuration before
     // it's good to go..
@@ -468,6 +467,7 @@
     });
 
     google.maps.event.addListener(infoBubble, 'closeclick', function() {
+      $('.bubble .media').remove();
       $('#list .item').removeClass('active');
     });
 
@@ -481,7 +481,12 @@
       // If we have an event argument, it means that this event was triggered
       // from the marker. Scroll to the list item.
       if (typeof event != 'undefined') {
-        $('body').scrollTo('#' + object.id, 250, {});
+        $('body').scrollTo('#' + object.id, 250, {
+          'offset': {
+            'left': 0,
+            'top': -parseInt($('#header').outerHeight())
+          }
+        });
       }
     });
 
