@@ -48,6 +48,25 @@ function initAboutOverlay() {
     $('#about-placepeer').toggleClass('hidden');
     return false;
   });
+
+  // Open ze about window the first time.
+  if (!$.cookie('about-overlay')) {
+    $('#logo').click();
+  }
+
+  // Lenghten the cookie another year for every other time.
+  else {
+    $.cookie('about-overlay', false, {
+      expires: 365
+    });
+  }
+
+  // Set ze cookie when closing ze window.
+  $('.overlay-back, .overlay .close-button').click(function(e){
+    $.cookie('about-overlay', false, {
+      expires: 365
+    });
+  });
 }
 
 
