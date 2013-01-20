@@ -141,13 +141,12 @@
         result_type: 'recent'
       },
       success: function(data, status) {
-        //console.log('Twitter: ' + page, data);
         if (typeof data['results'] == 'object') {
           $(data['results']).each(function(index) {
             resultDay = window.date('d', strtotime(this.created_at));
             if (this.geo && resultDay == searchDay) {
               // Set the arguments.
-              var id = 'twitter-' + index;
+              var id = 'twitter-' + page + '-' + index;
               var lat = this.geo.coordinates[0];
               var lon = this.geo.coordinates[1];
               var text = this.text;
@@ -222,7 +221,7 @@
             var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
             var user = this.ownername;
             var avatar = false;
-            
+
             buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
           });
         }
@@ -339,7 +338,7 @@
     // Add the markers to the marker clusterer.
     // TODO: Enable the clusterer again, It would need some configuration before
     // it's good to go..
-    //markerClusterer.addMarkers(allYourMarkers);    
+    //markerClusterer.addMarkers(allYourMarkers);
   }
 
   function addToAllYourNodes(id, lat, lon, text, image, video, date, url, user, avatar) {
@@ -553,7 +552,7 @@
       }
       allYourInfoWindows.length = 0;
     }
-    
+
     allYourNodes.length = 0;
 
     // Kill list.
