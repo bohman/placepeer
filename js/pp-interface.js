@@ -28,15 +28,6 @@ function initSearchForm() {
     $('#controls .searchDate').val(then);
     e.preventDefault();
   });
-
-
-
-  //$('#controls .datepicker').datepicker({
-  //  dateFormat: 'yy-mm-dd',
-  //  defaultDate: defaultDate,
-  //  firstDay: 1,
-  //  onSelect: function(dateText, inst) { $('#controls .searchDate').val(dateText); }
-  //});
 }
 
 
@@ -45,6 +36,12 @@ function initSearchForm() {
 //
 function initAboutOverlay() {
   $('#logo, .overlay-back, .overlay .close-button').click(function(e){
+    if(!$('#about-placepeer').is(':visible')) {
+      var top = $(document).scrollTop();
+      $('.overlay .overlay-content').css({
+        'top': parseInt(top + 20) + 'px'
+      })
+    }
     $('#about-placepeer').toggleClass('hidden');
     return false;
   });

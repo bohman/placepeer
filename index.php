@@ -82,10 +82,10 @@
       <div class="overlay-header gradient-blue">
         <h2 class="placepeer">Placepeer</h2>
       </div>
-      <p>Placepeer fetches time- and geotagged information to show you what and where stuff happens.</p>
-      <p>Right now we collect stuff from Youtube, Twitter, Flickr and Instagram, but we might add more services in the future. You get a chance to stumble upon events that would never show in the usual media flow.</p>
-      <p>Simply put: We place stuff on a map to make exploring fun. Yay!</p>
-      <p>This is pretty much just a proof of concept. An awesome proof of concept of course, but there are a few errors here and there. Some are due to API limitations. Some might be because we had too much coffe while building it. Feel free to message us on Twitter or Github to let us know about your finding. Or better yet - fix the problem yourself!</p>
+      <p>Placepeer fetches information to show you what and where stuff happens.</p>
+      <p>Want to find pics from the concert you attended, find someone who is reporting live from a war zone or just find out where the hipsters are having their coffee? This is the place for you.</p>
+      <p>We place social media content on a map and make it fun to explore. This way you get a chance to stumble upon events and people that would never show in the usual media flow. Yay!</p>
+      <p>This is pretty much just a proof of concept. An awesome proof of concept of course, but there might be a few errors here and there. Some are due to API limitations. Some might be because we had too much coffee while building it. Feel free to contact us on Twitter or Github to let us know about your finding. Or better yet - fix the problem yourself!</p>
       <ul>
         <li class="companies">Sponsored by <a href="http://oddhill.se">Odd Hill</a>, <a href="http://040.se">040</a> and <a href="http://mediegymnasiet.net">Mediegymnasiet</a></li>
         <li class="people">Built by <a href="http://twitter.com/jensgrip">Jens Grip</a>, <a href="http://twitter.com/bjornalbertsson">Björn Albertsson</a>, <a href="http://twitter.com/ojohansson">Olof Johansson</a>, <a href="http://twitter.com/punktlars">Lars Berggren</a> and <a href="http://twitter.com/linusbohman">Linus Bohman</a></li>

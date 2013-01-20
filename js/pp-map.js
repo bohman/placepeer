@@ -55,12 +55,10 @@
     if (params['lat'] && params['lon']) {
       searchLat = params['lat'];
       searchLon = params['lon'];
-    }
-    else if (google.loader.ClientLocation != null) {
+    } else if (google.loader.ClientLocation != null) {
       var searchLat = google.loader.ClientLocation.latitude;
       var searchLon = google.loader.ClientLocation.longitude;
-    }
-    else {
+    } else {
       var searchLat = 55.596911;
       var searchLon = 12.998478;
     }
@@ -88,7 +86,7 @@
     });
 
     google.maps.event.addListener(map, 'dragend', function(event) { updateParams(); });
-    google.maps.event.addListener(map, 'zoom_changed', function(event) { updateParams(); });
+    google.maps.event.addListener(map, 'zoom_changed', function(event) { updateParams(); setSlider(map.getZoom()) });
 
     // Create the geocoder object.
     geocoder = new google.maps.Geocoder();
@@ -678,6 +676,10 @@
 
   function setZoom(integer) {
     map.setZoom(integer);
+    setSlider(integer);
+  }
+
+  function setSlider(integer) {
     $('#map-overlay .mapZoomer').slider('option', 'value', integer)
       .siblings('.mapZoomLevel').val(integer);
   }
