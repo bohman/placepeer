@@ -86,7 +86,7 @@
         initiated = true;
       }
     });
-    
+
     google.maps.event.addListener(map, 'dragend', function(event) { updateParams(); });
     google.maps.event.addListener(map, 'zoom_changed', function(event) { updateParams(); });
 
@@ -159,7 +159,7 @@
               var url = 'https://twitter.com/' + this.from_user + '/status/' + this.id_str;
               var user = this.from_user;
               var avatar = this.profile_image_url;
-  
+
               // Add media
               // This one time, at band camp, we actually got a result where an object didn't have
               // 'entities', even though documentation said we should. So let's do an extra check. -LB
@@ -170,11 +170,11 @@
                   }
                 });
               }
-              
+
               buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
             }
           });
-  
+
           if (resultDay >= searchDay) {
             getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate, page + 1)
           }
@@ -231,7 +231,7 @@
       }
     });
   }
-  
+
   function getYouTube(searchLat, searchLon, searchRadius, searchQuery) {
     var endpoint = 'https://gdata.youtube.com/feeds/api/videos';
 
@@ -279,7 +279,7 @@
       }
     });
   }
-  
+
   function getInstagram(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var endpoint = 'https://api.instagram.com/v1/media/search';
 
@@ -306,7 +306,7 @@
                 return;
               }
             }
-          
+
             var id = 'instagram-' + index;
             var lat = this.location.latitude;
             var lon = this.location.longitude;
@@ -317,7 +317,7 @@
             var url = this.link;
             var user = this.user.username;
             var avatar = this.user.profile_picture;
-            
+
             buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
           });
         }
@@ -337,8 +337,7 @@
     $listItem.click(function() {
       google.maps.event.trigger(marker, 'click');
     });
-    
-    
+
     // Add the markers to the marker clusterer.
     // TODO: Enable the clusterer again, It would need some configuration before
     // it's good to go..
@@ -359,7 +358,7 @@
       avatar: avatar
     }
     allYourNodes.push(node);
-    
+
     return node;
   }
 
@@ -553,7 +552,7 @@
     // Kill list.
     $('#list').html('');
   }
-  
+
 
   //
   // getCurrentRadius()
