@@ -148,7 +148,7 @@
             resultDay = window.date('d', strtotime(this.created_at));
             if (this.geo && resultDay == searchDay) {
               // Set the arguments.
-              var id = 'twitter-' + index;
+              var id = 'twitter-' + page + '-' + index;
               var lat = this.geo.coordinates[0];
               var lon = this.geo.coordinates[1];
               var text = this.text;
