@@ -468,6 +468,7 @@
     });
 
     google.maps.event.addListener(infoBubble, 'closeclick', function() {
+      $('.bubble .media').remove();
       $('#list .item').removeClass('active');
     });
 
