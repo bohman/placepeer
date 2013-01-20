@@ -482,7 +482,12 @@
       // If we have an event argument, it means that this event was triggered
       // from the marker. Scroll to the list item.
       if (typeof event != 'undefined') {
-        $('body').scrollTo('#' + object.id, 250, {});
+        $('body').scrollTo('#' + object.id, 250, {
+          'offset': {
+            'left': 0,
+            'top': -parseInt($('#header').outerHeight())
+          }
+        });
       }
     });
 
