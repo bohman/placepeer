@@ -31,7 +31,7 @@
 <body>
 
   <div id="header" class="gradient-blue subtle-shadow">
-    <a id="logo" href="/"><h1 class="placepeer">Placepeer</h1><p class="version">Beta 0.8</p><p class="about">About this project</p></a>
+    <a id="logo" href="/"><h1 class="placepeer">Placepeer</h1><p class="version">Beta 0.9</p><p class="about">About this project</p></a>
     <div class="social-media">
       <p>Donate</p>
       <a class="flattr" href="http://flattr.com/thing/834017/Placepeer" target="_blank">Flattr Placepeer!</a>
