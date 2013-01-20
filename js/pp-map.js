@@ -86,7 +86,7 @@
         initiated = true;
       }
     });
-    
+
     google.maps.event.addListener(map, 'dragend', function(event) { updateParams(); });
     google.maps.event.addListener(map, 'zoom_changed', function(event) { updateParams(); });
 
@@ -143,7 +143,6 @@
         result_type: 'recent'
       },
       success: function(data, status) {
-        console.log('Twitter: ' + page, data);
         if (typeof data['results'] == 'object') {
           $(data['results']).each(function(index) {
             resultDay = window.date('d', strtotime(this.created_at));
@@ -159,7 +158,7 @@
               var url = 'https://twitter.com/' + this.from_user + '/status/' + this.id_str;
               var user = this.from_user;
               var avatar = this.profile_image_url;
-  
+
               // Add media
               // This one time, at band camp, we actually got a result where an object didn't have
               // 'entities', even though documentation said we should. So let's do an extra check. -LB
@@ -170,11 +169,11 @@
                   }
                 });
               }
-              
+
               buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
             }
           });
-  
+
           if (resultDay >= searchDay) {
             getTwitter(searchLat, searchLon, searchRadius, searchQuery, searchDate, page + 1)
           }
@@ -224,14 +223,14 @@
             var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
             var user = this.ownername;
             var avatar = false;
-            
+
             buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
           });
         }
       }
     });
   }
-  
+
   function getYouTube(searchLat, searchLon, searchRadius, searchQuery) {
     var endpoint = 'https://gdata.youtube.com/feeds/api/videos';
 
@@ -271,7 +270,7 @@
               var url = this.link[0].href;
               var user = this.author[0].name.$t;
               var avatar = false;
-              
+
               buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
             }
           });
@@ -279,7 +278,7 @@
       }
     });
   }
-  
+
   function getInstagram(searchLat, searchLon, searchRadius, searchQuery, searchDate) {
     var endpoint = 'https://api.instagram.com/v1/media/search';
 
@@ -306,7 +305,7 @@
                 return;
               }
             }
-          
+
             var id = 'instagram-' + index;
             var lat = this.location.latitude;
             var lon = this.location.longitude;
@@ -317,7 +316,7 @@
             var url = this.link;
             var user = this.user.username;
             var avatar = this.user.profile_picture;
-            
+
             buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
           });
         }
@@ -337,12 +336,12 @@
     $listItem.click(function() {
       google.maps.event.trigger(marker, 'click');
     });
-    
-    
+
+
     // Add the markers to the marker clusterer.
     // TODO: Enable the clusterer again, It would need some configuration before
     // it's good to go..
-    //markerClusterer.addMarkers(allYourMarkers);    
+    //markerClusterer.addMarkers(allYourMarkers);
   }
 
   function addToAllYourNodes(id, lat, lon, text, image, video, date, url, user, avatar) {
@@ -359,7 +358,7 @@
       avatar: avatar
     }
     allYourNodes.push(node);
-    
+
     return node;
   }
 
@@ -415,7 +414,7 @@
     allYourInfoWindows.push(infoBubble);
 
     google.maps.event.addListener(infoBubble, 'domready', function() {
-      if (!object.rendered) {        
+      if (!object.rendered) {
         var user = '<h3 class="user">' + object.user + '</h3>';
         var avatar = '';
         var text = object.text;
@@ -491,7 +490,7 @@
   }
 
   function renderInfoBubbleContent(infoBubble, object, avatar, user, text, media) {
-    text = text.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '<a href="$1" target="_blank">$1</a>'); 
+    text = text.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '<a href="$1" target="_blank">$1</a>');
 
     sender = '<a href="' + object.url + '" class="sender" target="_blank">' + avatar + user + '</a>';
     text = '<p class="text">' + text + '</p>';
@@ -542,13 +541,13 @@
       }
       allYourInfoWindows.length = 0;
     }
-    
+
     allYourNodes.length = 0;
 
     // Kill list.
     $('#list').html('');
   }
-  
+
 
   //
   // getCurrentRadius()
@@ -586,7 +585,7 @@
     hashParams.push('lon=' + curLatLon.lng());
     hashParams.push('zoom=' + map.getZoom());
     hashParams.push('radius=' + getCurrentRadius());
-    
+
     location.hash = hashParams.join('&');
     jQuery('#controls .jumpToLocation').val('');
   }
