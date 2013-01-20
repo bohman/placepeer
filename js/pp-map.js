@@ -168,7 +168,30 @@
                 });
               }
 
-              buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
+
+              var urls = text.match(/((http|https):\/\/|www\.)\S+/gi);
+              if (urls) {
+                for (var index in urls) {
+                  $.ajax({
+                    url: 'get.php?url=' + urls[index],
+                    dataType: 'json',
+                    async: true,
+                    complete: function(response, status) {
+                      result = $.parseJSON(response.responseText);
+                      if (result.video) {
+                        video = '<object width="280" height="210"><param name="movie" value="' + result.video + '"></param><param name="allowFullScreen" value="true"></param><param name="allowscriptaccess" value="always"></param><embed src="' + result.video + '" type="application/x-shockwave-flash" width="280" height="210" allowscriptaccess="always" allowfullscreen="true"></embed></object>';
+                      }
+                      if (result.image) {
+                        image = result.image;
+                      }
+                      buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
+                    }
+                  });
+                }
+              }
+              else {
+                buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
+              }
             }
           });
 
@@ -435,32 +458,7 @@
         }
 
         // Find urls in the text, and move them to a separate array.
-        if (!media.length) {
-          var urls = object.text.match(/((http|https):\/\/|www\.)\S+/gi);
-          if (urls) {
-            for (var index in urls) {
-              $.ajax({
-                url: 'get.php?url=' + urls[index],
-                dataType: 'json',
-                async: true,
-                complete: function(response, status) {
-                  result = $.parseJSON(response.responseText);
-                  if (result.image) {
-                    media = '<img src="' + result.image + '" width="100" />';
-                  }
-                  renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
-                }
-              });
-              if (media.length) {
-                break;
-              }
-            }
-          } else {
-            renderInfoBubbleContent(infoBubble, object, avatar, user, text, media, datestamp);
-          }
-        } else {
-          renderInfoBubbleContent(infoBubble, object, avatar, user, text, media, datestamp);
-        }
+        renderInfoBubbleContent(infoBubble, object, avatar, user, text, media, datestamp);
       }
 
       var $activeListItem = $('#list .item#' + object.id).addClass('active');
@@ -496,7 +494,7 @@
   }
 
   function renderInfoBubbleContent(infoBubble, object, avatar, user, text, media, datestamp) {
-    text = text.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '<a href="$1" target="_blank">$1</a>'); 
+    text = text.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '<a href="$1" target="_blank">$1</a>');
     sender = '<a href="' + object.url + '" class="sender" target="_blank">' + avatar + user + '</a>';
     text = '<p class="text">' + text + '</p>';
     closebutton = '<div class="close-button">close</div>';

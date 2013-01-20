@@ -6,7 +6,7 @@
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
     $response = curl_exec($curl);
     curl_close($curl);
-    
+
     //parsing begins here:
     $doc = new DOMDocument();
     @$doc->loadHTML($response);
@@ -17,8 +17,11 @@
       if ($meta->getAttribute('property') == 'og:image') {
         $return['image'] = $meta->getAttribute('content');
       }
+      elseif ($meta->getAttribute('property') == 'og:video') {
+        $return['video'] = $meta->getAttribute('content');
+      }
     }
-    
+
     print json_encode($return);
   }
 
