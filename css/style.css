@@ -361,6 +361,12 @@ img[src="http://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"] {
   height: auto;
 }
 
+.bubble .date {
+  margin-top: 5px;
+  color: #C5C5C5;
+  font-size: 12px;
+}
+
 
 /* Map overlay */
 #map-overlay {

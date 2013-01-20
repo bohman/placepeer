@@ -143,7 +143,7 @@
         result_type: 'recent'
       },
       success: function(data, status) {
-        console.log('Twitter: ' + page, data);
+        //console.log('Twitter: ' + page, data);
         if (typeof data['results'] == 'object') {
           $(data['results']).each(function(index) {
             resultDay = window.date('d', strtotime(this.created_at));
@@ -271,7 +271,7 @@
               var url = this.link[0].href;
               var user = this.author[0].name.$t;
               var avatar = false;
-              
+
               buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
             }
           });
@@ -313,7 +313,7 @@
             var text = this.caption ? this.caption.text : '';
             var image = this.images.thumbnail.url;
             var video = false;
-            var date = strtotime(this.created_time);
+            var date = this.created_time;
             var url = this.link;
             var user = this.user.username;
             var avatar = this.user.profile_picture;
@@ -414,11 +414,16 @@
     allYourInfoWindows.push(infoBubble);
 
     google.maps.event.addListener(infoBubble, 'domready', function() {
-      if (!object.rendered) {        
+      if (!object.rendered) {
         var user = '<h3 class="user">' + object.user + '</h3>';
         var avatar = '';
         var text = object.text;
         var media = '';
+        var datestamp = '';
+
+        if(object.date) {
+          datestamp = date('d F, H:i', object.date)
+        }
 
         if (object.avatar) {
           avatar = '<img class="avatar" src="' + object.avatar + '" />';
@@ -453,13 +458,11 @@
                 break;
               }
             }
+          } else {
+            renderInfoBubbleContent(infoBubble, object, avatar, user, text, media, datestamp);
           }
-          else {
-            renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
-          }
-        }
-        else {
-          renderInfoBubbleContent(infoBubble, object, avatar, user, text, media);
+        } else {
+          renderInfoBubbleContent(infoBubble, object, avatar, user, text, media, datestamp);
         }
       }
 
@@ -495,19 +498,24 @@
     return marker;
   }
 
-  function renderInfoBubbleContent(infoBubble, object, avatar, user, text, media) {
+  function renderInfoBubbleContent(infoBubble, object, avatar, user, text, media, datestamp) {
     text = text.replace(/(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gi, '<a href="$1" target="_blank">$1</a>'); 
-
     sender = '<a href="' + object.url + '" class="sender" target="_blank">' + avatar + user + '</a>';
     text = '<p class="text">' + text + '</p>';
+    closebutton = '<div class="close-button">close</div>';
+
     if (media.length) {
       media = '<div class="media">' + media + '</div>';
     }
 
-    closebutton = '<div class="close-button">close</div>';
+    if(datestamp != undefined) {
+      datestamp = '<p class="date">' + datestamp + '</p>';
+    } else {
+      datestamp = '';
+    }
 
     object.rendered = true;
-    infoBubble.setContent('<div class="bubble">' + sender + text + media + closebutton + '</div>');
+    infoBubble.setContent('<div class="bubble">' + sender + text + media + datestamp + closebutton + '</div>');
     infoBubble.updateContent_();
   }
 
