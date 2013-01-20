@@ -55,12 +55,10 @@
     if (params['lat'] && params['lon']) {
       searchLat = params['lat'];
       searchLon = params['lon'];
-    }
-    else if (google.loader.ClientLocation != null) {
+    } else if (google.loader.ClientLocation != null) {
       var searchLat = google.loader.ClientLocation.latitude;
       var searchLon = google.loader.ClientLocation.longitude;
-    }
-    else {
+    } else {
       var searchLat = 55.596911;
       var searchLon = 12.998478;
     }
@@ -88,7 +86,7 @@
     });
 
     google.maps.event.addListener(map, 'dragend', function(event) { updateParams(); });
-    google.maps.event.addListener(map, 'zoom_changed', function(event) { updateParams(); });
+    google.maps.event.addListener(map, 'zoom_changed', function(event) { updateParams(); setSlider(map.getZoom()) });
 
     // Create the geocoder object.
     geocoder = new google.maps.Geocoder();
@@ -143,13 +141,12 @@
         result_type: 'recent'
       },
       success: function(data, status) {
-        //console.log('Twitter: ' + page, data);
         if (typeof data['results'] == 'object') {
           $(data['results']).each(function(index) {
             resultDay = window.date('d', strtotime(this.created_at));
             if (this.geo && resultDay == searchDay) {
               // Set the arguments.
-              var id = 'twitter-' + index;
+              var id = 'twitter-' + page + '-' + index;
               var lat = this.geo.coordinates[0];
               var lon = this.geo.coordinates[1];
               var text = this.text;
@@ -224,7 +221,7 @@
             var url = 'http://www.flickr.com/photos/' + this.owner + '/' + this.id;
             var user = this.ownername;
             var avatar = false;
-            
+
             buildShit(id, lat, lon, text, image, video, date, url, user, avatar);
           });
         }
@@ -341,7 +338,7 @@
     // Add the markers to the marker clusterer.
     // TODO: Enable the clusterer again, It would need some configuration before
     // it's good to go..
-    //markerClusterer.addMarkers(allYourMarkers);    
+    //markerClusterer.addMarkers(allYourMarkers);
   }
 
   function addToAllYourNodes(id, lat, lon, text, image, video, date, url, user, avatar) {
@@ -555,7 +552,7 @@
       }
       allYourInfoWindows.length = 0;
     }
-    
+
     allYourNodes.length = 0;
 
     // Kill list.
@@ -599,7 +596,7 @@
     hashParams.push('lon=' + curLatLon.lng());
     hashParams.push('zoom=' + map.getZoom());
     hashParams.push('radius=' + getCurrentRadius());
-    
+
     location.hash = hashParams.join('&');
     jQuery('#controls .jumpToLocation').val('');
   }
@@ -679,6 +676,10 @@
 
   function setZoom(integer) {
     map.setZoom(integer);
+    setSlider(integer);
+  }
+
+  function setSlider(integer) {
     $('#map-overlay .mapZoomer').slider('option', 'value', integer)
       .siblings('.mapZoomLevel').val(integer);
   }
