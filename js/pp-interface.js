@@ -1,21 +1,4 @@
 //
-// Create noise in header. Uses Daniel Rapps Noisy-plugin:
-// https://github.com/DanielRapp/Noisy
-//
-// Found a showstopping bug in chrome, where this plugin exhausts localStorage.
-// Need to be examined further before using. 
-//
-function initNoise() {
-  $('#header').noisy({
-    'intensity': 1.5,
-    'size': 250,
-    'opacity': 0.2,
-    'monochrome': false
-  });
-}
-
-
-//
 // Sets up search form controls
 //
 function initSearchForm() {
@@ -72,7 +55,6 @@ function initAboutOverlay() {
 // Vroom vroom!
 //
 jQuery(document).ready(function() {
-  //initNoise();
   initSearchForm();
   initAboutOverlay();
 });
