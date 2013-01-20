@@ -450,7 +450,7 @@ img[src="http://maps.gstatic.com/intl/en_us/mapfiles/iw_close.gif"] {
 
 .overlay .overlay-content {
   z-index: 9999;
-  position: fixed;
+  position: absolute;
   background: #fff;
   width: 600px;
   left: 50%;
